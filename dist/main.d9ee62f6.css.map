@@ -1,0 +1,1 @@
+{"version":3,"sources":["src\\scss\\main.scss"],"names":[],"mappings":"AAAA;EACI;;AACA;EACI","file":"main.d9ee62f6.css","sourceRoot":"..","sourcesContent":["body {\r\n    background-color: cyan;\r\n    h1 {\r\n        text-decoration: underline;\r\n    }\r\n}"]}
