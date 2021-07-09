@@ -4,6 +4,7 @@ package.json
 package-lock.json
 node_modules/
 dist/
+dist
 .cache/
 babelPreprocessor..babelrc
 yarn.lock
