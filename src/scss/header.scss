@@ -1,0 +1,115 @@
+@import "./_variables.scss";
+//
+header {
+    margin: 2rem auto 4.5rem;
+    width: 95%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .imdb-text {
+        color: $main-golden-color;
+    }
+    .toggle-side-bar {
+        visibility: hidden;
+        pointer-events: none;
+    }
+    @media (max-width: $break-point-lg) {
+        .toggle-side-bar {
+            font-size: 1.1rem;
+            visibility: visible;
+            pointer-events: visible;
+            &:hover {
+                cursor: pointer;
+                color: $main-golden-color;
+            }
+        }
+    }
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 20rem;
+}
+
+.notifications-area {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    width: 5rem;
+    padding-right: 0.4rem;
+    i {
+        color: $main-white-color;
+        font-size: 1.4rem;
+        &:hover {
+            cursor: pointer;
+            color: $main-golden-color;
+        }
+    }
+    &__messages-box {
+        transition: opacity 300ms ease-in-out;
+        opacity: 0;
+        cursor: default;
+        z-index: $z-regular;
+        position: absolute;
+        bottom: -93px;
+        left: -42px;
+        background-color: $secondary-black-background-color;
+        width: 12rem;
+        padding: 0.8rem;
+        text-align: center;
+        &::after {
+            content: "";
+            position: absolute;
+            bottom: 62px;
+            left: 86px;
+            border: 15px solid transparent;
+            border-bottom-color: $secondary-black-background-color
+        }
+    }
+    &__messages-box--visible {
+        opacity: 1;
+    }
+    // 
+    &__alerts-box {
+        transition: opacity 300ms ease-in-out;
+        opacity: 0;
+        cursor: default;
+        z-index: $z-regular;
+        position: absolute;
+        bottom: -70px;
+        left: -85px;
+        background-color: $secondary-black-background-color;
+        width: 12rem;
+        padding: 0.8rem;
+        text-align: center;
+        &::after {
+            content: "";
+            position: absolute;
+            bottom: 44px;
+            left: 80px;
+            border: 15px solid transparent;
+            border-bottom-color: $secondary-black-background-color
+        }
+    }
+    &__alerts-box--visible {
+        opacity: 1;
+    }
+}
+
+.profile-area {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    &__picture {
+        img {
+            display: inline-block;
+            border: 1px solid $main-golden-color;
+            border-radius: 50%;
+            padding: 2px;
+            background-color: transparent;
+            margin-right: 1rem;
+        }
+    }
+}

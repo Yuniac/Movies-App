@@ -1,0 +1,53 @@
+@import "./variables.scss";
+//
+*,
+*::after,
+*::before {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+a {
+    text-decoration: none;
+    &:hover {
+        text-decoration: none;
+    }
+}
+
+ul li {
+    list-style-type: none;
+}
+
+html {
+    height: 100vh !important;
+    width: 100%;
+    scrollbar-color: transparent transparent;
+}
+
+body {
+    position: relative;
+    width: 100%;
+    font-family: "Rubik", sans-serif;
+    font-size: 1rem;
+    @media (min-width: $break-point-xlg) {
+        font-size: 1.2rem;
+    }
+    background-color: $main-black-background-color;
+    color: $main-grey-color;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.overlay-div {
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    z-index: $z-regular;
+    position: absolute;
+    display: none;
+    &__overlay--modifier {
+        display: block;
+    }
+}

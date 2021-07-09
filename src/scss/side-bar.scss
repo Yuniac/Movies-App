@@ -1,0 +1,90 @@
+@import "./_variables.scss";
+//
+.side-bar {
+    width: calc(25%);
+    min-width: 300px;
+    @media (max-width: $break-point-lg) {
+        display: none;
+    }
+    padding: 2rem 0;
+    border-right: 1px solid $main-white-color;
+    &__logo {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        .fa-ellipsis-v {
+            transition: all 350ms ease-in-out;
+            font-size: 1.4rem;
+            &:hover {
+                cursor: pointer;
+                color: $main-golden-color;
+            }
+        }
+        .side-bar-visibility {
+            opacity: 0;
+        }
+    }
+    &__container {
+        width: 70%;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: flex-start;
+        div {
+            margin: 1rem 0;
+        }
+    }
+    &__menu {
+        ul {
+            display: flex;
+            flex-direction: column;
+            span {
+                text-align: left;
+                width: 6rem;
+            }
+            li {
+                width: 9.5rem;
+                padding: 1rem 0;
+                display: flex;
+                justify-content: space-between;
+                transition: width 350ms ease-in-out;
+                &:hover {
+                    cursor: pointer;
+                    color: $main-white-color;
+                    width: 8.1rem;
+                }
+                &:hover .side-bar-icon {
+                    color: $main-golden-color;
+                }
+            }
+            li.dormant-icon {
+                margin-top: 7rem;
+                &:hover {
+                    width: 9.5rem;
+                }
+            }
+        }
+    }
+    img {
+        border: 1px solid $main-white-color;
+        border-radius: 7px;
+    }
+    h5 {
+        color: $main-dark-grey-color;
+        padding: 0.6rem 0;
+    }
+}
+
+// this class will overwrites what's necessary to have the sidebar show on mobile and small screens;
+.side-bar-visible {
+    background-color: $secondary-black-background-color;
+    border-radius: 1rem;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    display: block;
+    z-index: $z-important;
+    position: absolute;
+    left: 0;
+}
