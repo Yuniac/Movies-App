@@ -31,56 +31,75 @@ const nowPlayingContainerElement = document.querySelector("#now-playing-containe
 // const nowPlayingContainerElement = document.querySelector("#now-playing");
 
 // this function returns an array of 20 now in theatres movies;
-function makeInTheaterNowMovies() {
-    let urlToFetch = nowPlayingApiUrl + apiKey;
+let arrayToPreventDuplicatesMovies = [];
+let nowPlayingMoviesApiUrl = nowPlayingApiUrl + apiKey;
 
-    fetch(urlToFetch)
+function makeInTheaterNowMovies() {
+
+    fetch(nowPlayingMoviesApiUrl)
         .then(res => res.json())
         .then(jsonArray => {
-            let i = Math.floor(Math.random() * jsonArray.results.length) + 1;
-            let selectedMovie = jsonArray.results[i];
+            // whats going on here is that we are picking a random movie from the 'now playing' movies array which has about 20 movies, after that, to prevent getting duplicates we are putting this movie in an array and using it, after that we are making another random number which is another different movie and making sure it doesn't already exist in 'arrayToPreventDuplicatesMovies' array (if it does, roll another random movie in range again) and then, we remove the old movie and use the new one we just pushed to the array, thus never having two duplicates numbers/movies;
+            function randomNumber() {
+                let i = Math.floor(Math.random() * jsonArray.results.length) + 1;
+                return i
+            }
+            let randomMovie = randomNumber();
+            if (arrayToPreventDuplicatesMovies.indexOf(randomMovie) === -1) {
+                arrayToPreventDuplicatesMovies.push(randomMovie)
+            } else {
+                randomNumber();
+            }
+            if (arrayToPreventDuplicatesMovies.length >= 2) {
+                arrayToPreventDuplicatesMovies.shift();
+            }
+            let selectedMovie = jsonArray.results[arrayToPreventDuplicatesMovies[0]];
 
             if (selectedMovie.backdrop_path === null) {
-                // movie with this random id doesn't exist, roll again;
+                // this movie doesn't have a poster image or it doesn't exist, its unlikely given we are working with new/in theatres movies but just in case and if so, refetch;
                 makeInTheaterNowMovies();
             } else {
                 buildNowPlayingMovies(selectedMovie)
-                    // TODO deal with the console errors
-                    // console.clear() 
             }
-        })
+        }).catch(e => console.trace(e));
 }
 
 
 
 
 function buildNowPlayingMovies(movie) {
-    let container = document.createElement("div");
-
-    let cssClass = "now-playing__movie";
-    container.classList.add(cssClass);
-    let backgroundImageLink = makeMediaImg("w500", movie.backdrop_path)
+    let containerElement = createDivsElements("now-playing__movie", "overlay-css", movie)
+        // log(containerElement)
+    let backgroundImageLink = makeMediaImg("w1280", movie.backdrop_path)
     let backgroundImageLinkInCssFormat = "url('" + backgroundImageLink + "')"
-    log(backgroundImageLinkInCssFormat)
-    container.style.backgroundImage = backgroundImageLinkInCssFormat
 
-    nowPlayingContainerElement.append(container);
+    containerElement.style.backgroundImage = backgroundImageLinkInCssFormat
 
-    log("build function has been called")
+    nowPlayingContainerElement.append(containerElement);
 
-
-    // // container.style.backgroundImage = `"url('${makePosterImg("w500", json.posterPath)}')"`
-    // // container.textContent = json.title
-    // // log(`"url('${makePosterImg()}')"`);
 }
+// this function will create a div based on its argument to house a movie;
+function createDivsElements(wrapperCss, overlayCss, movie) {
+    let wrapper = document.createElement("div");
+    wrapper.classList.add(wrapperCss);
 
-// this function will create a poster image for a given movie/tv show based on its id;
+    let overlayDiv = document.createElement("div");
+    overlayDiv.classList.add(overlayCss);
+    let movieNameElement = document.createElement("h4");
+    movieNameElement.textContent = movie.title
+    overlayDiv.append(movieNameElement)
+    wrapper.append(overlayDiv)
+    return wrapper;
+}
+// this function will create a backdrop image for a given movie/tv show based on its id;
 function makeMediaImg(imgSize, imgPath) {
     let backgroundImgURL = imgURL + imgSize + imgPath
     return backgroundImgURL
 }
-makeInTheaterNowMovies()
-makeInTheaterNowMovies()
+// for (let i = 0; i < 2; i++) makeInTheaterNowMovies()
+
+// the landing page/discover/sort by parameters movies;
+
 
 
 
