@@ -54,5 +54,21 @@ main {
   background-position: center;
   position: relative;
 }
+.now-playing .overlay-css {
+  position: absolute;
+  background-color: #24282e71;
+  height: 100%;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+  border-radius: 3.2rem;
+  opacity: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.now-playing .overlay-css h4 {
+  color: #ffffff;
+}
 
 /*# sourceMappingURL=/main.d9ee62f6.css.map */
