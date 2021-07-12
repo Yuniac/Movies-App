@@ -10,8 +10,10 @@
 
 a {
     text-decoration: none;
+    color: inherit;
     &:hover {
         text-decoration: none;
+        text-shadow: 0 0 5px $main-black-background-color;
     }
 }
 
@@ -23,15 +25,19 @@ html {
     height: 100vh !important;
     width: 100%;
     scrollbar-color: transparent transparent;
+     ::-webkit-scrollbar {
+        width: 0px;
+        background: transparent;
+    }
 }
 
 body {
     position: relative;
     width: 100%;
     font-family: "Rubik", sans-serif;
-    font-size: 1rem;
+    font-size: $font-size-s;
     @media (min-width: $break-point-xlg) {
-        font-size: 1.2rem;
+        font-size: $font-size-m;
     }
     background-color: $main-black-background-color;
     color: $main-grey-color;

@@ -1,4 +1,10 @@
-// functions related to hiding/showing elements based on screen size, interactivity, etc;
+/*
+
+functions related to hiding/showing elements based on screen size, interactivity, etc;
+
+*/
+
+// import { sort } from "core-js/core/array";
 
 // the notifications and messages boxes;
 toggleNotificationsBox("alerts", "alertsBox", "notifications-area__alerts-box--visible");
@@ -32,11 +38,86 @@ sideBarToggler.addEventListener("click", () => {
     overlayDiv.classList.add(overlayDivTogglingCssClass)
 })
 
-overlayDiv.addEventListener("click", () => {
-    if (sideBarEl.classList.contains(sideBarTogglingCssClass)) {
-        sideBarEl.classList.remove(sideBarTogglingCssClass)
-    }
+// the hover effects on the movies posters;
+function hoverOverMovieEffect() {
+
+}
+
+// the sort by drop-down menus: using native 'select' and 'datalist' HTML elements was problematic because each browser renders them differently and there is no way to style them all consistently. So, I'm going to use custom HTML/CSS/JS to get the same result;
+function showSortMenus(el, elTarget, css) {
+    let htmlTogglerEl = document.getElementById(el);
+    let htmlTargetToToggle = document.getElementById(elTarget);
+
+    htmlTogglerEl.addEventListener("click", () => {
+        htmlTargetToToggle.classList.add(css)
+        overlayDiv.classList.add(overlayDivTogglingCssClass)
+    })
+}
+
+let dropDownMenuTogglingCss = "visible-drop-down-menu"
+
+showSortMenus("sort-by-placeholder", "sort-by-menu", dropDownMenuTogglingCss);
+showSortMenus("sort-menu-toggler-icon", "sort-by-menu", dropDownMenuTogglingCss);
+
+showSortMenus("ratings-placeholder", "ratings-menu", dropDownMenuTogglingCss);
+showSortMenus("ratings-menu-toggler-icon", "ratings-menu", dropDownMenuTogglingCss);
+
+
+// any click on the overlay div means that it has been invoked by a popup somewhere on the page, so it will remove all enabling classes from all our elements that uses this feature;
+const sortMenu = document.getElementById("sort-by-menu");
+const ratingsMenu = document.getElementById("ratings-menu");
+export function togglePopups() {
+    sideBarEl.classList.remove(sideBarTogglingCssClass);
+    ratingsMenu.classList.remove(dropDownMenuTogglingCss);
+    sortMenu.classList.remove(dropDownMenuTogglingCss);
     overlayDiv.classList.remove(overlayDivTogglingCssClass);
+
+}
+togglePopups();
+overlayDiv.addEventListener("click", () => {
+    togglePopups();
 })
 
-// the hover effects on the movies posters;
+// 
+
+// class CustomDropDownMenu {
+//     constructor(name, description, dropDownItems = []) {
+//         this.name = name
+//         this.description = description
+//         this.dropDownItems = dropDownItems
+//     }
+//     createHTML() {
+//         let container = document.createElement("div");
+//         let h4 = document.createElement("h4");
+//         let descriptionSpan = document.createElement("span");
+//         let toggler = document.createElement("span");
+//         let ul = document.createElement("ul");
+
+//         container.className = "properties-drop-down";
+//         toggler.className = "toggler-icon";
+//         toggler.id = "ratings-menu-toggler";
+//         ul.className = "drop-down-menu";
+//         ul.id = "ratings-menu"
+
+//         this.dropDownItems.forEach(function(item) {
+//             let li = document.createElement("li");
+//             li.textContent = item
+//             ul.append(li);
+//         })
+
+//         h4.textContent = this.name
+
+//         descriptionSpan.id = "sort-by-placeholder";
+//         container.append(h4)
+//         container.append(descriptionSpan)
+//         container.append(toggler)
+//         container.append(ul)
+//         return container
+//     }
+// }
+
+// let myDropDown = new CustomDropDownMenu("menuX", "some menu", ["all ratings", "some ratings"])
+//     // log(myDropDown)
+// console.log(myDropDown.createHTML());
+// let testDiv = document.querySelector("#test");
+// testDiv.append(myDropDown.createHTML());

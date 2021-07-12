@@ -28,47 +28,204 @@ main {
     flex-direction: column;
     justify-content: flex-start;
     width: 90%;
+    @media (max-width: $break-point-lg) {
+        width: 95%;
+    }
     margin: 0 auto;
     overflow-y: auto;
+    .movies-wrapper {
+        width: 90%;
+        margin: 0 auto;
+    }
 }
 
 .now-playing {
     text-align: center;
     min-height: 300px;
+    margin: 0 0 4rem;
     h2 {
         margin-bottom: 2.5rem;
         color: $main-golden-color;
-        font-size: 3.1rem;
+        font-size: $font-size-lg
     }
     &__container {
         width: 100%;
         display: flex;
-        justify-content: space-evenly;
+        justify-content: space-between;
+        @media (max-width: $break-point-l) {
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 0 auto;
+            align-items: center;
+        }
     }
     &__movie {
-        width: 39%;
+        width: 45%;
+        min-width: 350px;
+        @media (max-width: $break-point-l) {
+            min-width: 450px;
+            margin: 1rem 0;
+        }
         height: 300px;
         border: 1px solid $main-golden-color;
-        border-radius: $border-radius-2;
+        border-radius: $border-radius-4;
         background-repeat: no-repeat;
         background-size: cover;
         background-position: center;
         position: relative;
     }
-    .overlay-css {
+    &__overlay-css {
         position: absolute;
         background-color: $light-black-background-color;
         height: 100%;
         width: 100%;
         bottom: 0;
         left: 0;
-        border-radius: $border-radius-2;
-        opacity: 0;
+        border-radius: $border-radius-4;
+        // opacity: 0;
         display: flex;
         justify-content: center;
         align-items: center;
         h4 {
+            font-size: $font-size-m;
+            color: $main-golden-color;
+            border-bottom: 1px solid $main-white-color;
+            padding-bottom: 0.3rem;
+        }
+    }
+}
+
+.movies-gallery {
+    &__sort-area {
+        margin-bottom: 4rem;
+        display: flex;
+        justify-content: space-between;
+        width: clamp(260px, 70%, 70%);
+        @media (max-width: $break-point-lg) {
+            min-width: 100%;
+            margin: 0 auto 4rem;
+            flex-wrap: wrap;
+        }
+        &>div {
+            display: flex;
+            justify-content: space-between;
+            @media (max-width: $break-point-lg) {
+                margin: 2rem 0;
+            }
+        }
+        h4 {
+            margin-right: 0.6rem;
+            cursor: pointer;
+        }
+        label {
+            margin-right: 0.6rem;
+        }
+        .properties-drop-down {
+            position: relative;
+            span {
+                color: $main-white-color;
+            }
+            .toggler-icon {
+                position: absolute;
+                right: -16px;
+                top: 9px;
+                width: 0;
+                height: 0;
+                border: 5px solid transparent;
+                border-top: 5px solid $main-grey-color;
+                color: red;
+                cursor: pointer;
+            }
+            .drop-down-current-value {
+                cursor: pointer
+            }
+        }
+        // each drop down menu;
+        .drop-down-menu {
+            display: none;
+            position: absolute;
+            top: 19px;
+            right: -25px;
+            z-index: $z-regular;
+            &:hover {
+                cursor: pointer;
+            }
+            li {
+                background-color: $main-black-background-color;
+                color: $main-white-color;
+                border-right: 1px solid $main-white-color;
+                border-left: 1px solid $main-white-color;
+                width: 140px;
+                padding: 8px 14px;
+                &:first-of-type {
+                    border-top: 1px solid $main-white-color;
+                    border-top-right-radius: $border-radius-1;
+                    border-top-left-radius: $border-radius-1;
+                    margin-top: 5px;
+                }
+                &:last-of-type {
+                    border-bottom: 1px solid $main-white-color;
+                    border-bottom-right-radius: $border-radius-1;
+                    border-bottom-left-radius: $border-radius-1;
+                }
+                &:hover {
+                    background-color: $main-white-color;
+                    color: $main-black-background-color;
+                }
+            }
+        }
+        .visible-drop-down-menu {
+            display: block;
+            z-index: $z-important;
+        }
+        input {
+            background-color: $main-black-background-color;
+            outline: none;
+            border: none;
+            border-bottom: 2px solid $main-grey-color;
+            &:focus,
+            &:active {
+                outline: 1px solid $main-grey-color;
+            }
             color: $main-white-color;
+        }
+    }
+    &__landing-page {
+        position: relative;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+        grid-template-rows: auto;
+        justify-items: center;
+        .movie-container {
+            position: relative;
+            width: clamp(200px, 25%, 400px);
+            height: 350px;
+            background: $main-black-background-color;
+            margin-bottom: 2rem;
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            border-radius: $border-radius-1;
+            &__overlay-css {
+                position: absolute;
+                background-color: $light-black-background-color;
+                height: 100%;
+                width: 100%;
+                bottom: 0;
+                left: 0;
+                border-radius: $border-radius-1;
+                // opacity: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                text-align: center;
+                h4 {
+                    font-size: $font-size-s;
+                    color: $main-golden-color;
+                    border-bottom: 1px solid $main-white-color;
+                    padding-bottom: 0.3rem;
+                }
+            }
         }
     }
 }

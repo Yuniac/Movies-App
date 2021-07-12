@@ -60,7 +60,7 @@
                 }
             }
             li.dormant-icon {
-                margin-top: 7rem;
+                margin-top: 6rem;
                 &:hover {
                     width: 9.5rem;
                 }
@@ -87,4 +87,6 @@
     z-index: $z-important;
     position: absolute;
     left: 0;
+    top: 0;
+    bottom: 0;
 }
