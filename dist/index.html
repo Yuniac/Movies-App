@@ -3,10 +3,13 @@
 
 <head>
     <meta charset="UTF-8">
-    <link rel="preconnect" href="https://kit.fontawesome.com">
+    <link rel="preconnect" href="https://api.themoviedb.org">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://kit.fontawesome.com/4cc3961380.js" crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,400;0,900;1,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/base.344a573b.css">
     <link rel="stylesheet" href="/main.d9ee62f6.css">
     <link rel="stylesheet" href="/header.3c5ba23f.css">
@@ -56,17 +59,33 @@
                     </div>
                 </div>
                 <div class="movies-gallery">
-                    <div class="sort-area">
+                    <div class="movies-gallery__sort-area">
+                        <div class="properties-drop-down">
+                            <h4>Sort By:</h4>
+                            <span id="sort-by-placeholder" class="drop-down-current-value" data-parameter="popularity.desc">Popular</span>
+                            <span class="toggler-icon" id="sort-menu-toggler-icon"></span>
+                            <ul id="sort-by-menu" class="drop-down-menu">
+                                <li class="sort-value" id="test" data-value="release_date.desc">Latest</li>
+                                <li class="sort-value" data-value="popularity.desc" selected="">Popular</li>
+                                <li class="sort-value" data-value="release_date.gte=">Upcoming</li>
+                            </ul>
+                        </div>
+                        <div class="properties-drop-down">
+                            <h4>Show:</h4>
+                            <span id="ratings-placeholder" class="drop-down-current-value" data-parameter="vote_count.desc">Highest Rated</span>
+                            <span class="toggler-icon" id="ratings-menu-toggler-icon"></span>
+                            <ul id="ratings-menu" class="drop-down-menu">
+                                <li class="ratings-value" data-value="vote_average.gte">All Ratings:</li>
+                                <li class="ratings-value" data-value="vote_count.desc">Highest Rated</li>
+                                <li class="ratings-value" data-value="vote_count.asc">Lowest Rated</li>
+                            </ul>
+                        </div>
                         <div>
-                            <label for="sort-by-date">Sort By:</label>
-                            <select id="sort-by-date">
-                                <option value="dog">Dog</option>
-                                <option value="cat">Cat</option>
-                                <option value="hamster">Hamster</option>
-                                <option value="parrot">Parrot</option>
-                                <option value="spider">Spider</option>
-                                <option value="goldfish">Goldfish</option>
-                            </select></div>
+                            <label for="sort-by-period">Based On Year:</label>
+                            <input type="text" id="sort-byy-period" placeholder="Any..." class="drop-down-current-value" data-parameter="year=2021">
+                        </div>
+                    </div>
+                    <div class="movies-gallery__landing-page" id="landing-page">
                     </div>
                 </div>
             </div>
@@ -112,7 +131,7 @@
                 </div>
                 <div class="side-bar__menu side-categories">
                     <ul>
-                        <h5>Categoires</h5>
+                        <h5>Categories</h5>
                         <li>
                             <i class="side-bar-icon fas fa-video">
                             </i>
@@ -153,12 +172,8 @@
         </aside>
     </div>
     <div id="overlay-div" class="overlay-div"></div>
-    <script src="/js.d818e0ef.js"></script>
-    <script src="/helpers.11c4eaa7.js" defer=""></script>
+    <script src="/js.d818e0ef.js" type="module" defer=""></script>
+    <script src="/helpers.11c4eaa7.js" type="module" defer=""></script>
 </body>
 
 </html>
-
-
-<!-- <div id="now-playing-movies" class="now-playing__movies"></div>
-<div id="now-playing-movies" class="now-playing__movies"></div> -->
