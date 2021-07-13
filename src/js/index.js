@@ -16,13 +16,10 @@ const tvShowsApiURL = "https://api.themoviedb.org/3/tv/";
 const nowPlayingApiUrl = "https://api.themoviedb.org/3/movie/now_playing"
 const discoverMovieApiUrl = " https://api.themoviedb.org/3/discover/movie"
 
-let movieID;
-const linkToMovieUsingID = "https://www.themoviedb.org/movie/";
 const imgURL = "https://image.tmdb.org/t/p/";
-// html element
+
 const nowPlayingContainerElement = document.querySelector("#now-playing-container");
 
-// makePosterImg(250, "w500")
 
 
 // get random movies
@@ -42,7 +39,7 @@ function makeInTheaterNowMovies() {
     fetch(nowPlayingMoviesApiUrl)
         .then(res => res.json())
         .then(jsonArray => {
-            // whats going on here is that we are picking a random movie from the 'now playing' movies array which has about 20 movies, after that, to prevent getting duplicates we are putting this movie in an array and using it, after that we are making another random number which is another different movie and making sure it doesn't already exist in 'arrayToPreventDuplicatesMovies' array (if it does, roll another random movie in range again) and then, we remove the old movie and use the new one we just pushed to the array, thus never having two duplicates numbers/movies;
+            // whats going on here is that we are picking a random movie from the 'now playing' movies array which has about 20 movies, after that, to prevent getting duplicates we are putting this movie in an array and using it, after that we are making another random number which is another different movie and making sure it doesn't already exist in 'arrayToPreventDuplicatesMovies' array (if it does, roll another random movie within range) and then, we remove the old movie and use the new one we just pushed to the array, thus never having two duplicates numbers/movies;
             function randomNumber() {
                 let i = Math.floor(Math.random() * jsonArray.results.length) + 1;
                 randomMovie = i;
@@ -67,74 +64,114 @@ function makeInTheaterNowMovies() {
         }).catch(e => console.log(e));
 }
 
+const linkToAMovieUsingItsID = "https://www.themoviedb.org/movie/";
+// this function will create and append a fitting div for each movie based on its arguments;
+function makeHTMLMoviesContainers(containerCss, adjacentContinerCss, whereToAppendElement, poster = true, movie) {
+    let containerElement = document.createElement("div");
+    containerElement.classList.add(containerCss);
 
-function makeHTMLMoviesContainers(wrapperCss, overlayCss, whereToAppendElement, poster = true, movie) {
-    let containerElement = makeDivsElements(wrapperCss, overlayCss, movie);
+    let adjcentContainer = document.createElement("div");
+    adjcentContainer.classList.add(adjacentContinerCss);
+
+    containerElement.append(adjcentContainer);
+    // is it a movie poster? or one with backdrop? (backdrop ones are the 'in theatre movies' one  on top of the page), if its a poster it needs a different css/elements;
     if (poster) {
-        let backgroundImageLink = makeMediaImg("w1280", movie.poster_path);
+        let backgroundImageLink = makeMediaImg("w780", movie.poster_path);
         let backgroundImageLinkInCssFormat = "url('" + backgroundImageLink + "')";
-
         containerElement.style.backgroundImage = backgroundImageLinkInCssFormat;
+
+        let movieLinkElement = document.createElement("a");
+        movieLinkElement.href = linkToAMovieUsingItsID + movie.id;
+        movieLinkElement.textContent = movie.title
+
+        let movieNameElementContainer = document.createElement("div");
+        let movieNameElement = document.createElement("h4");
+        movieNameElement.append(movieLinkElement);
+        movieNameElementContainer.append(movieNameElement);
+        movieNameElementContainer.append(makeRating(movie.vote_average))
+        movieNameElementContainer.classList.add("rating-container");
+
+
+        let movieDetailsElement = document.createElement("p");
+        // release date;
+        let releaseDateElement = document.createElement("span");
+        releaseDateElement.textContent = movie.release_date.slice(0, 4) + " / ";
+        movieDetailsElement.append(releaseDateElement);
+        // genres
+        movieDetailsElement.append(makeGenres(movie.genre_ids))
+
+        adjcentContainer.append(movieDetailsElement);
+        adjcentContainer.append(movieNameElementContainer)
     } else {
         let backgroundImageLink = makeMediaImg("w1280", movie.backdrop_path);
         let backgroundImageLinkInCssFormat = "url('" + backgroundImageLink + "')";
 
         containerElement.style.backgroundImage = backgroundImageLinkInCssFormat;
+        let movieLinkElement = document.createElement("a");
+        movieLinkElement.href = linkToAMovieUsingItsID + movie.id;
+        movieLinkElement.textContent = movie.title
+
+
+        let movieNameElement = document.createElement("h4");
+        movieNameElement.append(movieLinkElement);
+
+        adjcentContainer.append(movieNameElement)
     }
     whereToAppendElement.append(containerElement);
 }
 
-
-// this function will create a div based on its arguments to contain a movie;
-function makeDivsElements(wrapperCss, overlayCss, movie) {
-    let wrapper = document.createElement("div");
-    wrapper.classList.add(wrapperCss);
-
-    let overlayDiv = document.createElement("div");
-    overlayDiv.classList.add(overlayCss);
-
-    let movieLink = document.createElement("a");
-    movieLink.href = linkToMovieUsingID + movie.id;
-    movieLink.textContent = movie.title
-
-    let movieNameElement = document.createElement("h4");
-    movieNameElement.append(movieLink);
-
-    overlayDiv.append(movieNameElement)
-    wrapper.append(overlayDiv)
-    return wrapper;
-}
-
-
-// this function will create a backdrop image for a given movie/tv show based on its id;
+// this function will create a backdrop or a poster image link for a given movie/tv show based on its id;
 function makeMediaImg(imgSize, imgPath) {
     let backgroundImgURL = imgURL + imgSize + imgPath
     return backgroundImgURL
 }
 
+// storing the genres locally to save us a fetch call, its highly unlikely the api we are using is going to change how their genres work;
+const allGenres = [{ "id": 28, "name": "Action" }, { "id": 12, "name": "Adventure" }, { "id": 16, "name": "Animation" }, { "id": 35, "name": "Comedy" }, { "id": 80, "name": "Crime" }, { "id": 99, "name": "Documentary" }, { "id": 18, "name": "Drama" }, { "id": 10751, "name": "Family" }, { "id": 14, "name": "Fantasy" }, { "id": 36, "name": "History" }, { "id": 27, "name": "Horror" }, { "id": 10402, "name": "Music" }, { "id": 9648, "name": "Mystery" }, { "id": 10749, "name": "Romance" }, { "id": 878, "name": "Science Fiction" }, { "id": 10770, "name": "TV Movie" }, { "id": 53, "name": "Thriller" }, { "id": 10752, "name": "War" }, { "id": 37, "name": "Western" }]
 
+// make and return the genres/html needed for the genres elemente;
+function makeGenres(movieGenresArray) {
+    // we are going to show only two categories/genres
+    movieGenresArray = movieGenresArray.slice(0, 2)
+    let genresElement = document.createElement("span");
+    allGenres.forEach(oneOfTheAllgenres => {
+        movieGenresArray.forEach(incomingGenre => {
+            incomingGenre === oneOfTheAllgenres.id ? genresElement.textContent += oneOfTheAllgenres.name + ", " : null
+        });
+
+    });
+    // remove the extra comma and space in case there are extra;
+    genresElement.textContent = genresElement.textContent.slice(0, -2)
+    return genresElement
+}
+
+
+// make and return the rating number/html needed for the rating element;
+function makeRating(rating) {
+    let ratingElementContainer = document.createElement("p");
+    let ratingElement = document.createElement("span");
+    ratingElementContainer.classList.add("rating-css");
+    if (rating) {
+        // we only want to show the first digit in the rating, no floating rating numbers;
+        let ratingString = String(rating)
+        ratingString > 1 ? ratingElement.textContent = ratingString.slice(0, 1) : null
+        ratingElementContainer.append(ratingElement)
+    } else {
+        ratingElement.textContent = "?"
+    }
+
+    return ratingElementContainer;
+}
 
 // build in theaters movies, currently only shows 2 therefor we calling this function twice;
 for (let i = 0; i < 2; i++) makeInTheaterNowMovies()
-
 
 // the landing page/discover/sort by parameters movies;
 const sortBy = "&sort_by="
 const andSymbol = "&"
 const landingPageElement = document.querySelector("#landing-page");
 
-function makeLandingPageMovies(properties, rating, specificYear) {
-    let discoverMoviesFetchUrl = discoverMovieApiUrl + apiKey + sortBy + properties + andSymbol + rating + andSymbol + specificYear;
-    fetch(discoverMoviesFetchUrl)
-        .then(res => res.json())
-        .then(json => {
-            log(json)
-            json.results.forEach(movie => {
-                makeHTMLMoviesContainers("movie-container", "movie-container__overlay-css", landingPageElement, true, movie);
-            })
-        })
-}
-
+// filter the landing page movies based on changes in the filters drop down menus
 function filterLandingPageMovies(el, elTargetToUpdate, fetchParametersValue) {
     const valuesList = document.querySelectorAll(el);
     const spanToShowCurrentValue = document.querySelector(elTargetToUpdate);
@@ -142,7 +179,6 @@ function filterLandingPageMovies(el, elTargetToUpdate, fetchParametersValue) {
     // fetch movies based on the queries from the filters menus;
     const fetchParameter = document.querySelectorAll(fetchParametersValue);
     const [sortBy, rating, year] = fetchParameter
-    // log(year)
 
     // handle updating the values visually;
     valuesList.forEach(li => {
@@ -158,17 +194,33 @@ function filterLandingPageMovies(el, elTargetToUpdate, fetchParametersValue) {
 
     let textInput = document.querySelector("#sort-byy-period");
     textInput.addEventListener("keyup", (e) => {
-        e.key === "Enter" ? makeLandingPageMovies(sortBy.dataset.parameter, rating.dataset.parameter, year.dataset.parameter) : null
+        e.key === "Enter" ? makeLandingPageMovies(sortBy.dataset.parameter, rating.dataset.parameter, year.dataset.parameter) : null;
         textInput.value === "" ? textInput.dataset.parameter = "year=2021" : textInput.dataset.parameter = `year=${textInput.value}`
     })
 
-    // build movies upon loading;
-    makeLandingPageMovies(sortBy.dataset.parameter, rating.dataset.parameter, year.dataset.parameter)
 }
-
-
+// fetch the ladning page movies and make the html needed for them;
+function makeLandingPageMovies(properties = "popularity.desc", rating = "vote_count.desc", specificYear = 2021) {
+    let discoverMoviesFetchUrl = discoverMovieApiUrl + apiKey + sortBy + properties + andSymbol + rating + andSymbol + specificYear;
+    fetch(discoverMoviesFetchUrl)
+        .then(res => res.json())
+        .then(json => {
+            log(json)
+            json.results.forEach(movie => {
+                makeHTMLMoviesContainers("movie-container", "movie-container__description-css", landingPageElement, true, movie);
+            })
+        })
+}
+// have making new movies for the landing page upon changing the filters by calling this function with the right parameters for each filter below;
 filterLandingPageMovies(".sort-value", "#sort-by-placeholder", ".drop-down-current-value")
 filterLandingPageMovies(".ratings-value", "#ratings-placeholder", ".drop-down-current-value")
+
+// creat landing page movies;
+makeLandingPageMovies()
+
+
+
+
 
 
 // const testDataSet = document.querySelector("#test");
