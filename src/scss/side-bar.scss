@@ -58,11 +58,16 @@
                 &:hover .side-bar-icon {
                     color: $main-golden-color;
                 }
-            }
-            li.dormant-icon {
-                margin-top: 6rem;
-                &:hover {
-                    width: 9.5rem;
+                &.dormant-icon {
+                    margin-top: 6rem;
+                    &:hover {
+                        width: 9.5rem;
+                    }
+                }
+                i {
+                    &.current-page {
+                        color: $main-golden-color;
+                    }
                 }
             }
         }
