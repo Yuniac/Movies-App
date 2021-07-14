@@ -49,11 +49,16 @@
                 padding: 1rem 0;
                 display: flex;
                 justify-content: space-between;
-                transition: width 350ms ease-in-out;
+                transition: all 350ms ease-in-out;
+                position: relative;
                 &:hover {
-                    cursor: pointer;
-                    color: $main-white-color;
-                    width: 8.1rem;
+                    left: -6px;
+                }
+                span {
+                    &:hover {
+                        color: $main-white-color;
+                        cursor: pointer;
+                    }
                 }
                 &:hover .side-bar-icon {
                     color: $main-golden-color;
@@ -61,7 +66,7 @@
                 &.dormant-icon {
                     margin-top: 6rem;
                     &:hover {
-                        width: 9.5rem;
+                        position: static;
                     }
                 }
                 i {

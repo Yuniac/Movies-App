@@ -1,4 +1,5 @@
 // those two imports are required to make async functions work with parcel;
+// import { search } from "core-js/fn/symbol";
 import "core-js/stable";
 import "regenerator-runtime/runtime";
 
@@ -7,7 +8,6 @@ import { togglePopups } from "./helpers"
 // TODO remove this function: 
 export const log = console.log;
 
-// for fetching data and working with the api;
 // the api link structure
 const apiKey = "?api_key=abb107c96224ec174a429b41fa17acda";
 
@@ -17,10 +17,9 @@ const nowPlayingApiUrl = "https://api.themoviedb.org/3/movie/now_playing"
 const discoverMovieApiUrl = " https://api.themoviedb.org/3/discover/movie"
 
 const imgURL = "https://image.tmdb.org/t/p/";
+const linkToAMovieUsingItsID = "https://www.themoviedb.org/movie/";
 
 const nowPlayingContainerElement = document.querySelector("#now-playing-container");
-
-
 
 // get random movies
 // const randomMovies = "https://api.themoviedb.org/3/discover/movie";
@@ -28,7 +27,6 @@ const nowPlayingContainerElement = document.querySelector("#now-playing-containe
 // fetch(randomMovies + apiKey).then(res => res.json()).then(res => console.log(res))
 
 // get random movie/tvshow of the day;
-
 
 // this function returns an array of 20 now in theatres movies;
 let arrayToPreventDuplicatesMovies = [];
@@ -39,32 +37,92 @@ function makeInTheaterNowMovies() {
     fetch(nowPlayingMoviesApiUrl)
         .then(res => res.json())
         .then(jsonArray => {
-            // whats going on here is that we are picking a random movie from the 'now playing' movies array which has about 20 movies, after that, to prevent getting duplicates we are putting this movie in an array and using it, after that we are making another random number which is another different movie and making sure it doesn't already exist in 'arrayToPreventDuplicatesMovies' array (if it does, roll another random movie within range) and then, we remove the old movie and use the new one we just pushed to the array, thus never having two duplicates numbers/movies;
+            // whats going on here is that we are picking a random movie from the 'now playing' movies array which has about 20 movies;
+            // then to prevent getting duplicates we are putting this movie in an array for comparison later.
+            // then we are making another random number which represents different movie and making sure it doesn't already exist in 'arrayToPreventDuplicatesMovies' array (if it does, roll another random movie within range) and finally, we shift() (since shift removes the first element in an array, and since we are pushing new stuff, the older item in the array will have index of 0 so shift() removes it) the old movie and use the new one we just pushed to the array, thus never having two duplicates numbers/movies;
             function randomNumber() {
-                let i = Math.floor(Math.random() * jsonArray.results.length) + 1;
+                let i = Math.floor(Math.random() * jsonArray.results.length);
                 randomMovie = i;
             }
-            randomNumber()
-            if (arrayToPreventDuplicatesMovies.indexOf(randomMovie) === -1) {
-                arrayToPreventDuplicatesMovies.push(randomMovie)
-            } else {
-                randomNumber();
+            randomNumber();
+
+            function preventDuplicates() {
+                if (arrayToPreventDuplicatesMovies.indexOf(randomMovie) === -1) {
+                    arrayToPreventDuplicatesMovies.push(randomMovie)
+                } else {
+                    randomNumber();
+                    preventDuplicates();
+                }
+                if (arrayToPreventDuplicatesMovies.length >= 2) {
+                    arrayToPreventDuplicatesMovies.shift();
+                }
             }
-            if (arrayToPreventDuplicatesMovies.length >= 2) {
-                arrayToPreventDuplicatesMovies.shift();
-            }
+            preventDuplicates();
             let selectedMovie = jsonArray.results[arrayToPreventDuplicatesMovies[0]];
-            if (selectedMovie.backdrop_path === null || selectedMovie === undefined) {
-                // this movie doesn't have a poster image or it doesn't exist, its unlikely given we are working with new/in theatres movies but just in case and if so, refetch;
-                makeInTheaterNowMovies();
-                log("this ran")
-            } else {
+            if (selectedMovie.backdrop_path !== null || selectedMovie !== undefined) {
                 makeHTMLMoviesContainers("now-playing__movie", "now-playing__overlay-css", nowPlayingContainerElement, false, selectedMovie)
             }
-        }).catch(e => console.log(e));
+        })
+        .catch(() => makeInTheaterNowMovies());
 }
 
-const linkToAMovieUsingItsID = "https://www.themoviedb.org/movie/";
+// ============================================================================================================================================================= // 
+
+// this function will will make and return a backdrop or a poster image link for a given movie/tv show based on its id;
+function makeMediaImg(imgSize, imgPath) {
+    let backgroundImgURL = imgURL + imgSize + imgPath
+    return backgroundImgURL
+}
+
+// storing the genres locally to save us a fetch call, its highly unlikely the api we are using is going to change how their genres work;
+const allGenres = [{ "id": 28, "name": "Action" }, { "id": 12, "name": "Adventure" }, { "id": 16, "name": "Animation" }, { "id": 35, "name": "Comedy" }, { "id": 80, "name": "Crime" }, { "id": 99, "name": "Documentary" }, { "id": 18, "name": "Drama" }, { "id": 10751, "name": "Family" }, { "id": 14, "name": "Fantasy" }, { "id": 36, "name": "History" }, { "id": 27, "name": "Horror" }, { "id": 10402, "name": "Music" }, { "id": 9648, "name": "Mystery" }, { "id": 10749, "name": "Romance" }, { "id": 878, "name": "Science Fiction" }, { "id": 10770, "name": "TV Movie" }, { "id": 53, "name": "Thriller" }, { "id": 10752, "name": "War" }, { "id": 37, "name": "Western" }]
+
+// this function will make and return the genres and the html needed for the them;
+function makeGenres(movieGenresArray) {
+    let genresElement = document.createElement("span");
+    // if no genres;
+    if (!movieGenresArray.length) {
+        genresElement.textContent = "Unknown Genre"
+        return genresElement
+    }
+
+    // if it has a known genre, we are going to show only two genres from its list;
+    movieGenresArray = movieGenresArray.slice(0, 2)
+
+    allGenres.forEach(oneOfTheAllgenres => {
+        movieGenresArray.forEach(incomingGenre => {
+            incomingGenre === oneOfTheAllgenres.id ? genresElement.textContent += oneOfTheAllgenres.name + ", " : null
+        });
+
+    });
+    // remove the extra comma and space in case there are extra;
+    genresElement.textContent = genresElement.textContent.slice(0, -2)
+    return genresElement
+}
+
+
+// make and return the rating number and the html needed for the rating element;
+// rating = 'vote_average';
+function makeRating(rating) {
+    let ratingElementContainer = document.createElement("p");
+    let ratingElement = document.createElement("span");
+    ratingElementContainer.classList.add("rating-css");
+    if (rating) {
+        // we only want to show the first digit in the rating, no floating rating numbers;
+        // rating comes as a number;
+        let ratingString = String(rating)
+            // check its length, if it has two digits or more (which is the case with floating numbers ratings like: 7.1) then remove everything but the first number.
+            // we made the number a string earlier so we can work with it;
+        ratingString > 1 ? ratingElement.textContent = ratingString.slice(0, 1) : null
+    } else {
+        ratingElement.textContent = "N/A"
+    }
+    ratingElementContainer.append(ratingElement)
+    return ratingElementContainer;
+}
+
+// ============================================================================================================================================================= // 
+
 // this function will create and append a fitting div for each movie based on its arguments;
 function makeHTMLMoviesContainers(containerCss, adjacentContinerCss, whereToAppendElement, poster = true, movie) {
     let containerElement = document.createElement("div");
@@ -74,11 +132,21 @@ function makeHTMLMoviesContainers(containerCss, adjacentContinerCss, whereToAppe
     adjcentContainer.classList.add(adjacentContinerCss);
 
     containerElement.append(adjcentContainer);
-    // is it a movie poster? or one with backdrop? (backdrop ones are the 'in theatre movies' one  on top of the page), if its a poster it needs a different css/elements;
+    // is it a movie poster? or one with backdrop? (backdrop ones are the 'in theatre movies' ones on top of the page), if its a poster it needs a different css/elements;
     if (poster) {
-        let backgroundImageLink = makeMediaImg("w780", movie.poster_path);
-        let backgroundImageLinkInCssFormat = "url('" + backgroundImageLink + "')";
-        containerElement.style.backgroundImage = backgroundImageLinkInCssFormat;
+        if (movie.poster_path !== null) {
+            let backgroundImageLink = makeMediaImg("w780", movie.poster_path);
+            let backgroundImageLinkInCssFormat = "url('" + backgroundImageLink + "')";
+            containerElement.style.backgroundImage = backgroundImageLinkInCssFormat;
+        } else {
+            let backgroundImageFallSafeElement = document.createElement("div");
+            backgroundImageFallSafeElement.classList.add("movie-container__background-img-fall-safe")
+            let noBackgroundText = document.createElement("p");
+            noBackgroundText.textContent = "No Poster 404";
+            backgroundImageFallSafeElement.append(noBackgroundText);
+
+            containerElement.append(backgroundImageFallSafeElement);
+        }
 
         let movieLinkElement = document.createElement("a");
         movieLinkElement.href = linkToAMovieUsingItsID + movie.id;
@@ -91,11 +159,14 @@ function makeHTMLMoviesContainers(containerCss, adjacentContinerCss, whereToAppe
         movieNameElementContainer.append(makeRating(movie.vote_average))
         movieNameElementContainer.classList.add("rating-container");
 
-
         let movieDetailsElement = document.createElement("p");
         // release date;
         let releaseDateElement = document.createElement("span");
-        releaseDateElement.textContent = movie.release_date.slice(0, 4) + " / ";
+        if (movie.release_date.length) {
+            releaseDateElement.textContent = movie.release_date.slice(0, 4) + " / ";
+        } else {
+            releaseDateElement.textContent = "Unkown Release Date"
+        }
         movieDetailsElement.append(releaseDateElement);
         // genres
         movieDetailsElement.append(makeGenres(movie.genre_ids))
@@ -120,116 +191,116 @@ function makeHTMLMoviesContainers(containerCss, adjacentContinerCss, whereToAppe
     whereToAppendElement.append(containerElement);
 }
 
-// this function will create a backdrop or a poster image link for a given movie/tv show based on its id;
-function makeMediaImg(imgSize, imgPath) {
-    let backgroundImgURL = imgURL + imgSize + imgPath
-    return backgroundImgURL
-}
-
-// storing the genres locally to save us a fetch call, its highly unlikely the api we are using is going to change how their genres work;
-const allGenres = [{ "id": 28, "name": "Action" }, { "id": 12, "name": "Adventure" }, { "id": 16, "name": "Animation" }, { "id": 35, "name": "Comedy" }, { "id": 80, "name": "Crime" }, { "id": 99, "name": "Documentary" }, { "id": 18, "name": "Drama" }, { "id": 10751, "name": "Family" }, { "id": 14, "name": "Fantasy" }, { "id": 36, "name": "History" }, { "id": 27, "name": "Horror" }, { "id": 10402, "name": "Music" }, { "id": 9648, "name": "Mystery" }, { "id": 10749, "name": "Romance" }, { "id": 878, "name": "Science Fiction" }, { "id": 10770, "name": "TV Movie" }, { "id": 53, "name": "Thriller" }, { "id": 10752, "name": "War" }, { "id": 37, "name": "Western" }]
-
-// make and return the genres/html needed for the genres elemente;
-function makeGenres(movieGenresArray) {
-    // we are going to show only two categories/genres
-    movieGenresArray = movieGenresArray.slice(0, 2)
-    let genresElement = document.createElement("span");
-    allGenres.forEach(oneOfTheAllgenres => {
-        movieGenresArray.forEach(incomingGenre => {
-            incomingGenre === oneOfTheAllgenres.id ? genresElement.textContent += oneOfTheAllgenres.name + ", " : null
-        });
-
-    });
-    // remove the extra comma and space in case there are extra;
-    genresElement.textContent = genresElement.textContent.slice(0, -2)
-    return genresElement
-}
-
-
-// make and return the rating number/html needed for the rating element;
-function makeRating(rating) {
-    let ratingElementContainer = document.createElement("p");
-    let ratingElement = document.createElement("span");
-    ratingElementContainer.classList.add("rating-css");
-    if (rating) {
-        // we only want to show the first digit in the rating, no floating rating numbers;
-        let ratingString = String(rating)
-        ratingString > 1 ? ratingElement.textContent = ratingString.slice(0, 1) : null
-        ratingElementContainer.append(ratingElement)
-    } else {
-        ratingElement.textContent = "?"
-    }
-
-    return ratingElementContainer;
-}
-
-// build in theaters movies, currently only shows 2 therefor we calling this function twice;
-for (let i = 0; i < 2; i++) makeInTheaterNowMovies()
-
-// the landing page/discover/sort by parameters movies;
-const sortBy = "&sort_by="
-const andSymbol = "&"
+// the landing-page/discover/sort-by-parameters movies;
 const landingPageElement = document.querySelector("#landing-page");
 
-// filter the landing page movies based on changes in the filters drop down menus
-function filterLandingPageMovies(el, elTargetToUpdate, fetchParametersValue) {
+// update the drop down menus values, I could have added this with the next sibiling function which uses the same values to fetch new movies but it proved more complicated/annoying than i thought it would be so i ended up splitting them in two separate functions;
+function updateLandingPageMoviesFilters(el, elTargetToUpdate) {
     const valuesList = document.querySelectorAll(el);
     const spanToShowCurrentValue = document.querySelector(elTargetToUpdate);
 
-    // fetch movies based on the queries from the filters menus;
-    const fetchParameter = document.querySelectorAll(fetchParametersValue);
-    const [sortBy, rating, year] = fetchParameter
-
-    // handle updating the values visually;
+    // handle updating the values visually and getting new movies accordingly;
     valuesList.forEach(li => {
         li.addEventListener("click", () => {
-            // send the values from each sorting field as a query in our fetch request;
-            landingPageElement.innerHTML = "";
-            makeLandingPageMovies(sortBy.dataset.parameter, rating.dataset.parameter, year.dataset.parameter)
             spanToShowCurrentValue.textContent = li.textContent;
             spanToShowCurrentValue.dataset.parameter = li.dataset.value
+            landingPageElement.innerHTML = "";
+            makeLandingPageMoviesBasadOnParameters(1)
             togglePopups();
         })
     });
-
-    let textInput = document.querySelector("#sort-byy-period");
-    textInput.addEventListener("keyup", (e) => {
-        e.key === "Enter" ? makeLandingPageMovies(sortBy.dataset.parameter, rating.dataset.parameter, year.dataset.parameter) : null;
-        textInput.value === "" ? textInput.dataset.parameter = "year=2021" : textInput.dataset.parameter = `year=${textInput.value}`
-    })
-
 }
-// fetch the ladning page movies and make the html needed for them;
-function makeLandingPageMovies(properties = "popularity.desc", rating = "vote_count.desc", specificYear = 2021) {
-    let discoverMoviesFetchUrl = discoverMovieApiUrl + apiKey + sortBy + properties + andSymbol + rating + andSymbol + specificYear;
+updateLandingPageMoviesFilters(".sort-value", "#sort-by-placeholder", ".drop-down-current-value")
+updateLandingPageMoviesFilters(".ratings-value", "#ratings-placeholder", ".drop-down-current-value")
+
+// fetch the landing page movies and make the html needed for them;
+function makeLandingPageMovies(properties = "popularity.desc", rating = "vote_count.desc", specificYear, pageNumber = 1) {
+    const sortBy = "&sort_by=";
+    const andSymbol = "&";
+    const page = "page="
+    let discoverMoviesFetchUrl = discoverMovieApiUrl + apiKey + sortBy + properties + andSymbol + rating + andSymbol + specificYear + andSymbol + page + pageNumber;
     fetch(discoverMoviesFetchUrl)
         .then(res => res.json())
         .then(json => {
-            log(json)
             json.results.forEach(movie => {
                 makeHTMLMoviesContainers("movie-container", "movie-container__description-css", landingPageElement, true, movie);
             })
-        })
+        }).catch((e) => console.log(e))
 }
-// have making new movies for the landing page upon changing the filters by calling this function with the right parameters for each filter below;
-filterLandingPageMovies(".sort-value", "#sort-by-placeholder", ".drop-down-current-value")
-filterLandingPageMovies(".ratings-value", "#ratings-placeholder", ".drop-down-current-value")
 
-// creat landing page movies;
+
+// load more content upon scrolling;
+const main = document.querySelector("main");
+let loadMoreThreshold = 1200;
+main.addEventListener("scroll", () => {
+    // we need a helper function to request a different page. if we call the same function that built the initial movies for us then we are going to rebuild the samve movies over and over;
+    if (main.scrollTop + loadMoreThreshold > (main.scrollHeight - main.offsetHeight)) loadMoreContent();
+
+})
+
+// pageNumber is which page should the api response with, now it returns the first page (page number 1) by default but after scrolling, if we don't change the page number we will get the same movies over and over;
+let pageNumber = 2;
+
+function loadMoreContent() {
+    pageNumber++
+    makeLandingPageMoviesBasadOnParameters(pageNumber)
+}
+
+// change what movies being shown in the landing page based on the parameters which we take from the dropdown menus;
+function makeLandingPageMoviesBasadOnParameters(pageNumber = 1) {
+    // fetch movies based on the queries from the filters menus;
+    const fetchParameter = document.querySelectorAll("[data-parameter]");
+    const [sortBy, rating, year] = fetchParameter
+    makeLandingPageMovies(sortBy.dataset.parameter, rating.dataset.parameter, year.dataset.parameter, pageNumber)
+        // reset the year parameter
+    year.dataset.parameter = "";
+};
+
+// show only movies based on a certian year;
+let textInput = document.querySelector("#sort-byy-period");
+let clearFiltersButton = document.querySelector("#clear-filters-button");
+
+function filterLandingPageMoviesBasedOnYear() {
+    textInput.addEventListener("keyup", function(e) {
+        if (e.key === "Enter") {
+            let year = this.value
+            if (this.value === "") {
+                clearFiltersButton.classList.remove("clear-filters-button__visible")
+                this.classList.add("warn-incorrect-query");
+                setTimeout(() => {
+                    this.classList.remove("warn-incorrect-query")
+                }, 1500);
+            } else {
+                clearFiltersButton.classList.add("clear-filters-button__visible")
+                this.dataset.parameter = "primary_release_year=" + year
+                this.value = "";
+                landingPageElement.innerHTML = "";
+                makeLandingPageMoviesBasadOnParameters(1)
+            }
+        }
+    })
+}
+filterLandingPageMoviesBasedOnYear()
+
+
+// // build in theaters movies, currently only shows 2 therefor we calling this function twice;
+for (let i = 0; i < 2; i++) makeInTheaterNowMovies();
+
+// create landing page movies;
 makeLandingPageMovies()
 
+// ============================================================================================================================================================= // 
 
+// search functions;
 
+const searchInput = document.querySelector("#search-field");
+const form = document.querySelector("#search-form");
+let searchQuery;
 
-
-
-// const testDataSet = document.querySelector("#test");
-// log(testDataSet.dataset.value)
-
-
-
-
-
+searchInput.addEventListener("change", () => {
+    searchQuery = searchInput.value;
+    log(searchQuery)
+})
 
 
 
@@ -284,7 +355,7 @@ makeLandingPageMovies()
 //                 // console.clear() 
 //             }
 //         }).catch((e) => {
-//             // log(e)
+//      
 //             // getMediaOfTheDay()
 //         })
 // }
@@ -295,13 +366,13 @@ makeLandingPageMovies()
 // function buildTodaysMovie(json) {
 //     // let posterPath = json.backdrop_path
 //     // makePosterImg("w500", posterPath)
-//     log(json.title)
+//    
 // }
 
 // function buildTodaysTvShow(json) {
 //     // let posterPath = json.backdrop_path
 //     // makePosterImg("w500", posterPath)
-//     log(json.name);
+//    
 // }
 
 // function makeMediaOfTheDay() {

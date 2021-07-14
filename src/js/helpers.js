@@ -4,8 +4,6 @@ functions related to hiding/showing elements based on screen size, interactivity
 
 */
 
-// import { sort } from "core-js/core/array";
-
 // the notifications and messages boxes;
 toggleNotificationsBox("alerts", "alertsBox", "notifications-area__alerts-box--visible");
 toggleNotificationsBox("messages", "messagesBox", "notifications-area__messages-box--visible");
@@ -77,47 +75,3 @@ togglePopups();
 overlayDiv.addEventListener("click", () => {
     togglePopups();
 })
-
-// 
-
-// class CustomDropDownMenu {
-//     constructor(name, description, dropDownItems = []) {
-//         this.name = name
-//         this.description = description
-//         this.dropDownItems = dropDownItems
-//     }
-//     createHTML() {
-//         let container = document.createElement("div");
-//         let h4 = document.createElement("h4");
-//         let descriptionSpan = document.createElement("span");
-//         let toggler = document.createElement("span");
-//         let ul = document.createElement("ul");
-
-//         container.className = "properties-drop-down";
-//         toggler.className = "toggler-icon";
-//         toggler.id = "ratings-menu-toggler";
-//         ul.className = "drop-down-menu";
-//         ul.id = "ratings-menu"
-
-//         this.dropDownItems.forEach(function(item) {
-//             let li = document.createElement("li");
-//             li.textContent = item
-//             ul.append(li);
-//         })
-
-//         h4.textContent = this.name
-
-//         descriptionSpan.id = "sort-by-placeholder";
-//         container.append(h4)
-//         container.append(descriptionSpan)
-//         container.append(toggler)
-//         container.append(ul)
-//         return container
-//     }
-// }
-
-// let myDropDown = new CustomDropDownMenu("menuX", "some menu", ["all ratings", "some ratings"])
-//     // log(myDropDown)
-// console.log(myDropDown.createHTML());
-// let testDiv = document.querySelector("#test");
-// testDiv.append(myDropDown.createHTML());

@@ -52,7 +52,7 @@
                     </div>
                 </div>
             </header>
-            <div class="movies-main-container ">
+            <div id="browse-container" class="landing-page-container container">
                 <div id="now-playing" class="now-playing">
                     <h1>Now In Theaters</h1>
                     <div class="now-playing__container" id="now-playing-container">
@@ -62,36 +62,59 @@
                     <div class="movies-gallery__sort-area">
                         <div class="properties-drop-down">
                             <h4>Sort By:</h4>
-                            <span id="sort-by-placeholder" class="drop-down-current-value" data-parameter="popularity.desc">Popular</span>
+                            <span id="sort-by-placeholder" class="drop-down-current-value" data-parameter="popularity.desc">Popularity</span>
                             <span class="toggler-icon" id="sort-menu-toggler-icon"></span>
                             <ul id="sort-by-menu" class="drop-down-menu">
-                                <li class="sort-value" id="test" data-value="release_date.desc">Latest</li>
-                                <li class="sort-value" data-value="popularity.desc" selected>Popular</li>
-                                <li class="sort-value" data-value="release_date.gte=">Upcoming</li>
+                                <li class="sort-value" data-value="release_date.desc">New and Upcoming</li>
+                                <li class="sort-value" data-value="popularity.desc" selected>Most Popular</li>
                             </ul>
                         </div>
                         <div class="properties-drop-down">
                             <h4>Show:</h4>
-                            <span id="ratings-placeholder" class="drop-down-current-value" data-parameter="vote_count.desc">Highest Rated</span>
+                            <span id="ratings-placeholder" class="drop-down-current-value" data-parameter="vote_count.desc">Highest To Lowest:</span>
                             <span class="toggler-icon" id="ratings-menu-toggler-icon"></span>
                             <ul id="ratings-menu" class="drop-down-menu">
-                                <li class="ratings-value" data-value="vote_average.gte">All Ratings:</li>
-                                <li class="ratings-value" data-value="vote_count.desc">Highest Rated</li>
-                                <li class="ratings-value" data-value="vote_count.asc">Lowest Rated</li>
+                                <li class="ratings-value" data-value="vote_count.desc">Highest To Lowest</li>
+                                <li class="ratings-value" data-value="vote_count.asc">Lowest To Highest</li>
                             </ul>
                         </div>
                         <div>
-                            <label for="sort-by-period">Based On Year:</label>
-                            <input type="text" id="sort-byy-period" placeholder="Any..." class="drop-down-current-value" data-parameter="year=2021">
+                            <label for="sort-by-period">Based On Certain year:</label>
+                            <input type="text" id="sort-byy-period" placeholder="Any..." class="drop-down-current-value text-input" data-parameter="primary_release_year=">
+                            <button class="clear-filters-button clear-filters-button__visible" id="clear-filters-button">Clear Filters</button>
                         </div>
                     </div>
                     <div class="movies-gallery__landing-page" id="landing-page">
                     </div>
                 </div>
             </div>
+            <div id="search-container" class="search-container container visible-container">
+                <div id="search-field-container" class="search-field-container">
+                    <form id="search-form">
+                        <label for="search-field">Movies And Tv Shows Search:</label>
+                        <input id="search-field" type="text">
+                    </form>
+                </div>
+                <div id="search-results"></div>
+            </div>
+            <div id="movies-container" class="movies-container container">3333333333333333333333333333333333333333Lorem ipsum dolor sit, amet consectetur adipisicing elit. Exercitationem vel porro, ad laborum saepe accusantium officiis, nulla neque dolores similique velit, est quia. Quam ipsum blanditiis laboriosam
+                libero odit magni? Dolorem et, laudantium ipsam quasi aut illum deserunt harum sed minus, quaerat suscipit. Tempore voluptate quo illum fuga ut porro tempora cum deleniti earum, non molestiae, blanditiis accusantium ducimus at. Veritatis
+                quae quas, consequatur facilis quis aliquam beatae deserunt provident delectus quo rem impedit maiores id alias quisquam eum accusamus, sapiente doloribus consequuntur quos? Doloremque ratione vel facilis eligendi. Assumenda? Rem porro
+                modi eligendi? Animi molestiae excepturi repellat, eos distinctio laudantium. Earum vitae in exercitationem voluptatem nesciunt dolorum! Sequi ab, ut nisi nulla dignissimos veritatis consectetur! Animi nulla sint nam? Eaque, labore doloribus
+                error odio qui temporibus voluptas atque molestias, rem non natus blanditiis ut sed voluptatum dignissimos aliquid itaque vitae aspernatur sequi officiis vero provident? Corrupti eos doloremque quo.</div>
+            <div id="tvshows-container" class="tvshows-container container">444444444444444444444444444444444444444444444444444 Lorem ipsum dolor sit, amet consectetur adipisicing elit. Exercitationem vel porro, ad laborum saepe accusantium officiis, nulla neque dolores similique velit, est quia. Quam ipsum blanditiis
+                laboriosam libero odit magni? Dolorem et, laudantium ipsam quasi aut illum deserunt harum sed minus, quaerat suscipit. Tempore voluptate quo illum fuga ut porro tempora cum deleniti earum, non molestiae, blanditiis accusantium ducimus
+                at. Veritatis quae quas, consequatur facilis quis aliquam beatae deserunt provident delectus quo rem impedit maiores id alias quisquam eum accusamus, sapiente doloribus consequuntur quos? Doloremque ratione vel facilis eligendi. Assumenda?
+                Rem porro modi eligendi? Animi molestiae excepturi repellat, eos distinctio laudantium. Earum vitae in exercitationem voluptatem nesciunt dolorum! Sequi ab, ut nisi nulla dignissimos veritatis consectetur! Animi nulla sint nam? Eaque,
+                labore doloribus error odio qui temporibus voluptas atque molestias, rem non natus blanditiis ut sed voluptatum dignissimos aliquid itaque vitae aspernatur sequi officiis vero provident? Corrupti eos doloremque quo.</div>
+            <div id="celebs-container" class="celebs-container container">555555555555555555555555555555555555555555Lorem ipsum dolor sit, amet consectetur adipisicing elit. Exercitationem vel porro, ad laborum saepe accusantium officiis, nulla neque dolores similique velit, est quia. Quam ipsum blanditiis laboriosam
+                libero odit magni? Dolorem et, laudantium ipsam quasi aut illum deserunt harum sed minus, quaerat suscipit. Tempore voluptate quo illum fuga ut porro tempora cum deleniti earum, non molestiae, blanditiis accusantium ducimus at. Veritatis
+                quae quas, consequatur facilis quis aliquam beatae deserunt provident delectus quo rem impedit maiores id alias quisquam eum accusamus, sapiente doloribus consequuntur quos? Doloremque ratione vel facilis eligendi. Assumenda? Rem porro
+                modi eligendi? Animi molestiae excepturi repellat, eos distinctio laudantium. Earum vitae in exercitationem voluptatem nesciunt dolorum! Sequi ab, ut nisi nulla dignissimos veritatis consectetur! Animi nulla sint nam? Eaque, labore doloribus
+                error odio qui temporibus voluptas atque molestias, rem non natus blanditiis ut sed voluptatum dignissimos aliquid itaque vitae aspernatur sequi officiis vero provident? Corrupti eos doloremque quo.</div>
         </main>
         <aside class="side-bar side-bar--visible">
-            <div class="side-bar__container">
+            <nav class="side-bar__container">
                 <div class="side-bar__logo">
                     <div>
                         <img src="src/img/icons/side-bar-logo.png" alt="IMDB logo">
@@ -103,7 +126,7 @@
                         <li>
                             <i class="side-bar-icon current-page fas fa-infinity">
                             </i>
-                            <span>
+                            <span data-toggler-target="browse-container">
                                 Browse
                             </span>
                         </li>
@@ -123,7 +146,7 @@
                         <li>
                             <i class="side-bar-icon fas fa-search">
                             </i>
-                            <span>
+                            <span data-toggler-target="search-container">
                                 Search
                             </span>
                         </li>
@@ -135,7 +158,7 @@
                         <li>
                             <i class="side-bar-icon fas fa-video">
                             </i>
-                            <span>
+                            <span data-toggler-target="movies-container">
                                 Movies
                             </span>
                         </li>
@@ -143,7 +166,7 @@
                             <i class="side-bar-icon fas fa-tv">
 
                             </i>
-                            <span>
+                            <span data-toggler-target="tvshows-container">
                                 TV Shows
                             </span>
                         </li>
@@ -151,7 +174,7 @@
                             <i class="side-bar-icon fas fa-portrait">
 
                             </i>
-                            <span>
+                            <span data-toggler-target="celebs-container">
                                 Celebs
                             </span>
                         </li>
@@ -168,12 +191,13 @@
                         </li>
                     </ul>
                 </div>
-            </div>
+            </nav>
         </aside>
     </div>
     <div id="overlay-div" class="overlay-div"></div>
     <script src="src/js/index.js" type="module" defer></script>
     <script src="src/js/helpers.js" type="module" defer></script>
+    <script src="src/js/routingContent.js" defer></script>
 </body>
 
 </html>
