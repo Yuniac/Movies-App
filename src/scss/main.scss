@@ -33,7 +33,12 @@ main {
     }
     margin: 0 auto;
     overflow-y: auto;
-    .movies-main-container {
+    scroll-behavior: smooth;
+    .container {
+        display: none;
+    }
+    .visible-container {
+        display: block;
         width: 92%;
         margin: 0 auto;
     }
@@ -100,7 +105,7 @@ main {
         margin-bottom: 4rem;
         display: flex;
         justify-content: space-between;
-        width: clamp(260px, 70%, 70%);
+        width: clamp(260px, 80%, 90%);
         @media (max-width: $break-point-lg) {
             min-width: 100%;
             margin: 0 auto 4rem;
@@ -109,6 +114,7 @@ main {
         &>div {
             display: flex;
             justify-content: space-between;
+            align-items: center;
             @media (max-width: $break-point-lg) {
                 margin: 2rem 0;
             }
@@ -120,6 +126,30 @@ main {
         label {
             margin-right: 0.6rem;
         }
+        .text-input {
+            background-color: $main-black-background-color;
+            outline: none;
+            border: none;
+            border-bottom: 2px solid $main-grey-color;
+            text-indent: 1px;
+            margin: 0 0.7rem;
+            &:focus,
+            &:active {
+                outline: 1px solid $main-grey-color;
+            }
+            color: $main-white-color;
+        }
+        .clear-filters-button {
+            background-color: transparent;
+            color: $main-grey-color;
+            border-radius: 1rem;
+            width: 4rem;
+            padding: 2px 0;
+            opacity: 0;
+            &__visible {
+                opacity: 1;
+            }
+        }
         .properties-drop-down {
             position: relative;
             span {
@@ -127,8 +157,8 @@ main {
             }
             .toggler-icon {
                 position: absolute;
-                right: -16px;
-                top: 9px;
+                right: -15px;
+                top: 15px;
                 width: 0;
                 height: 0;
                 border: 5px solid transparent;
@@ -137,7 +167,10 @@ main {
                 cursor: pointer;
             }
             .drop-down-current-value {
-                cursor: pointer
+                cursor: pointer;
+                &__dormant {
+                    color: $secondary-black-background-color;
+                }
             }
         }
         // each drop down menu;
@@ -145,8 +178,10 @@ main {
             display: none;
             position: absolute;
             top: 19px;
-            right: -25px;
+            right: -65px;
             z-index: $z-regular;
+            width: max-content;
+            text-align: left;
             &:hover {
                 cursor: pointer;
             }
@@ -155,7 +190,6 @@ main {
                 color: $main-white-color;
                 border-right: 1px solid $main-white-color;
                 border-left: 1px solid $main-white-color;
-                width: 140px;
                 padding: 8px 14px;
                 &:first-of-type {
                     border-top: 1px solid $main-white-color;
@@ -178,17 +212,6 @@ main {
             display: block;
             z-index: $z-important;
         }
-        input {
-            background-color: $main-black-background-color;
-            outline: none;
-            border: none;
-            border-bottom: 2px solid $main-grey-color;
-            &:focus,
-            &:active {
-                outline: 1px solid $main-grey-color;
-            }
-            color: $main-white-color;
-        }
     }
     &__landing-page {
         position: relative;
@@ -206,13 +229,28 @@ main {
             background-size: cover;
             background-position: center;
             border-radius: $border-radius-1;
+            &__background-img-fall-safe {
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: $light-black-background-color;
+                border-radius: $border-radius-1;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-family: Arial, Helvetica, sans-serif;
+                font-size: $font-size-m;
+            }
             &__description-css {
                 position: absolute;
                 height: 3.8rem;
                 width: 100%;
                 bottom: -67px;
                 left: 0;
-                // opacity: 0;
                 display: flex;
                 flex-direction: column;
                 justify-content: space-between;
@@ -224,6 +262,7 @@ main {
                     padding-bottom: 0.3rem;
                     padding-top: 0.5rem;
                     max-width: 150px;
+                    font-weight: 400;
                 }
                 p {
                     font-size: $font-size-xxs;
@@ -240,6 +279,7 @@ main {
                     .rating-css {
                         background-color: $main-golden-color;
                         color: $main-black-background-color;
+                        font-size: $font-size-s;
                         width: 2.5rem;
                         height: 2.5rem;
                         border-radius: $border-radius-2;
