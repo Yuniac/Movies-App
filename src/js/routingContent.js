@@ -6,10 +6,15 @@ containersTogglers.forEach(toggler => {
     toggler.addEventListener("click", function(e) {
         containers.forEach(container => {
             if (container.id === e.target.dataset.togglerTarget) {
-                container.classList.add("visible-container");
+                loadThisContainer(container)
             } else {
                 container.classList.remove("visible-container");
             }
         })
     })
 })
+
+function loadThisContainer(container) {
+    console.log(container)
+    container.classList.add("visible-container");
+}

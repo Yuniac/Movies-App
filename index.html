@@ -9,7 +9,7 @@
     <script src="https://kit.fontawesome.com/4cc3961380.js" crossorigin="anonymous"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,400;0,900;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="src/scss/base.scss">
     <link rel="stylesheet" href="src/scss/main.scss">
     <link rel="stylesheet" href="src/scss/header.scss">
@@ -52,14 +52,14 @@
                     </div>
                 </div>
             </header>
-            <div id="browse-container" class="landing-page-container container">
+            <div id="landing-page-container" class="landing-page-container container">
                 <div id="now-playing" class="now-playing">
                     <h1>Now In Theaters</h1>
                     <div class="now-playing__container" id="now-playing-container">
                     </div>
                 </div>
-                <div class="movies-gallery">
-                    <div class="movies-gallery__sort-area">
+                <div class="landing-page-gallery">
+                    <div class="landing-page-gallery__sort-area">
                         <div class="properties-drop-down">
                             <h4>Sort By:</h4>
                             <span id="sort-by-placeholder" class="drop-down-current-value" data-parameter="popularity.desc">Popularity</span>
@@ -84,34 +84,66 @@
                             <button class="clear-filters-button clear-filters-button__visible" id="clear-filters-button">Clear Filters</button>
                         </div>
                     </div>
-                    <div class="movies-gallery__landing-page" id="landing-page">
+                    <div class="grid-container" id="landing-page">
                     </div>
                 </div>
             </div>
-            <div id="search-container" class="search-container container visible-container">
-                <div id="search-field-container" class="search-field-container">
-                    <form id="search-form">
-                        <label for="search-field">Movies And Tv Shows Search:</label>
-                        <input id="search-field" type="text">
-                    </form>
+            <div id="movies-container" class="movies-container container">
+                <div>
+                    <div id="movies-search-field-container" class="search-field-container">
+                        <form id="movies-search-form" class="search-field-container__form-section">
+                            <label for="movies-search-field">Search for Movies or Keep Browsing:</label>
+                            <input id="movies-search-field" type="text" autocomplete="off">
+                            <div class="search-icon-container"><i class="fas fa-search"></i></div>
+                        </form>
+                    </div>
                 </div>
-                <div id="search-results"></div>
+                <div class="grid-container" id="movies-results">
+                </div>
             </div>
-            <div id="movies-container" class="movies-container container">3333333333333333333333333333333333333333Lorem ipsum dolor sit, amet consectetur adipisicing elit. Exercitationem vel porro, ad laborum saepe accusantium officiis, nulla neque dolores similique velit, est quia. Quam ipsum blanditiis laboriosam
-                libero odit magni? Dolorem et, laudantium ipsam quasi aut illum deserunt harum sed minus, quaerat suscipit. Tempore voluptate quo illum fuga ut porro tempora cum deleniti earum, non molestiae, blanditiis accusantium ducimus at. Veritatis
-                quae quas, consequatur facilis quis aliquam beatae deserunt provident delectus quo rem impedit maiores id alias quisquam eum accusamus, sapiente doloribus consequuntur quos? Doloremque ratione vel facilis eligendi. Assumenda? Rem porro
-                modi eligendi? Animi molestiae excepturi repellat, eos distinctio laudantium. Earum vitae in exercitationem voluptatem nesciunt dolorum! Sequi ab, ut nisi nulla dignissimos veritatis consectetur! Animi nulla sint nam? Eaque, labore doloribus
-                error odio qui temporibus voluptas atque molestias, rem non natus blanditiis ut sed voluptatum dignissimos aliquid itaque vitae aspernatur sequi officiis vero provident? Corrupti eos doloremque quo.</div>
-            <div id="tvshows-container" class="tvshows-container container">444444444444444444444444444444444444444444444444444 Lorem ipsum dolor sit, amet consectetur adipisicing elit. Exercitationem vel porro, ad laborum saepe accusantium officiis, nulla neque dolores similique velit, est quia. Quam ipsum blanditiis
-                laboriosam libero odit magni? Dolorem et, laudantium ipsam quasi aut illum deserunt harum sed minus, quaerat suscipit. Tempore voluptate quo illum fuga ut porro tempora cum deleniti earum, non molestiae, blanditiis accusantium ducimus
-                at. Veritatis quae quas, consequatur facilis quis aliquam beatae deserunt provident delectus quo rem impedit maiores id alias quisquam eum accusamus, sapiente doloribus consequuntur quos? Doloremque ratione vel facilis eligendi. Assumenda?
-                Rem porro modi eligendi? Animi molestiae excepturi repellat, eos distinctio laudantium. Earum vitae in exercitationem voluptatem nesciunt dolorum! Sequi ab, ut nisi nulla dignissimos veritatis consectetur! Animi nulla sint nam? Eaque,
-                labore doloribus error odio qui temporibus voluptas atque molestias, rem non natus blanditiis ut sed voluptatum dignissimos aliquid itaque vitae aspernatur sequi officiis vero provident? Corrupti eos doloremque quo.</div>
-            <div id="celebs-container" class="celebs-container container">555555555555555555555555555555555555555555Lorem ipsum dolor sit, amet consectetur adipisicing elit. Exercitationem vel porro, ad laborum saepe accusantium officiis, nulla neque dolores similique velit, est quia. Quam ipsum blanditiis laboriosam
-                libero odit magni? Dolorem et, laudantium ipsam quasi aut illum deserunt harum sed minus, quaerat suscipit. Tempore voluptate quo illum fuga ut porro tempora cum deleniti earum, non molestiae, blanditiis accusantium ducimus at. Veritatis
-                quae quas, consequatur facilis quis aliquam beatae deserunt provident delectus quo rem impedit maiores id alias quisquam eum accusamus, sapiente doloribus consequuntur quos? Doloremque ratione vel facilis eligendi. Assumenda? Rem porro
-                modi eligendi? Animi molestiae excepturi repellat, eos distinctio laudantium. Earum vitae in exercitationem voluptatem nesciunt dolorum! Sequi ab, ut nisi nulla dignissimos veritatis consectetur! Animi nulla sint nam? Eaque, labore doloribus
-                error odio qui temporibus voluptas atque molestias, rem non natus blanditiis ut sed voluptatum dignissimos aliquid itaque vitae aspernatur sequi officiis vero provident? Corrupti eos doloremque quo.</div>
+            <div id="tvshows-container" class="tvshows-container container">
+                <div>
+                    <div id="tv-search-field-container" class="search-field-container">
+                        <form id="tv-search-form" class="search-field-container__form-section">
+                            <label for="tv-search-field">Search for TV Shows:</label>
+                            <input id="tv-search-field" type="text" autocomplete="off">
+                            <div class="search-icon-container"><i class="fas fa-search"></i></div>
+                        </form>
+                    </div>
+                </div>
+                <div id="tvshows-results" class="grid-container"></div>
+            </div>
+            <div id="celebs-container" class="celebs-container container visible-container">
+                <div>
+                    <div id="celebs-search-field-container" class="search-field-container">
+                        <form id="celebs-search-form" class="search-field-container__form-section">
+                            <label for="celebs-search-field">Search for Celebrities:</label>
+                            <input id="celebs-search-field" type="text" autocomplete="off">
+                            <div class="search-icon-container"><i class="fas fa-search"></i></div>
+                        </form>
+                    </div>
+                </div>
+                <div id="celebs-results" class="rows-container">
+                    <div class="generic-celeb-container">
+                        <div class="generic-celeb-container__personal">
+                            <div class="generic-celeb-container__img">
+                                IMG
+                            </div>
+                        </div>
+                        <div class="generic-celeb-container__overview">
+                            <div class="generic-celeb-container__info">
+                                <p><span>name?</span> is Known for <span>acting?</span> with popularity of <span>popularity?.</span></p>
+                                <p>some of his most well known for movies include but not limited to: <span><a> href="known_for. forEach.linkToMovieUsingItsID+idtitle</a></span></p>
+                                <div class="generic-celeb-container__mini-movies">
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </main>
         <aside class="side-bar side-bar--visible">
             <nav class="side-bar__container">
@@ -126,7 +158,7 @@
                         <li>
                             <i class="side-bar-icon current-page fas fa-infinity">
                             </i>
-                            <span data-toggler-target="browse-container">
+                            <span data-toggler-target="landing-page-container">
                                 Browse
                             </span>
                         </li>
@@ -143,18 +175,11 @@
                             <span>My Rating
                             </span>
                         </li>
-                        <li>
-                            <i class="side-bar-icon fas fa-search">
-                            </i>
-                            <span data-toggler-target="search-container">
-                                Search
-                            </span>
-                        </li>
                     </ul>
                 </div>
                 <div class="side-bar__menu side-categories">
                     <ul>
-                        <h5>Categories</h5>
+                        <h5>Search For</h5>
                         <li>
                             <i class="side-bar-icon fas fa-video">
                             </i>
@@ -198,6 +223,7 @@
     <script src="src/js/index.js" type="module" defer></script>
     <script src="src/js/helpers.js" type="module" defer></script>
     <script src="src/js/routingContent.js" defer></script>
+    <script src="src/js/fetchingHelpers.js" type="module" defer></script>
 </body>
 
 </html>
