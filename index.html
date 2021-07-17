@@ -52,7 +52,7 @@
                     </div>
                 </div>
             </header>
-            <div id="landing-page-container" class="landing-page-container container">
+            <div id="browse-container" class="browse-container container container--visible">
                 <div id="now-playing" class="now-playing">
                     <h1>Now In Theaters</h1>
                     <div class="now-playing__container" id="now-playing-container">
@@ -62,29 +62,29 @@
                     <div class="landing-page-gallery__sort-area">
                         <div class="properties-drop-down">
                             <h4>Sort By:</h4>
-                            <span id="sort-by-placeholder" class="drop-down-current-value" data-parameter="popularity.desc">Popularity</span>
+                            <span id="sort-by-placeholder" class="drop-down-current-value" data-parameter="popularity.desc">Most Popular</span>
                             <span class="toggler-icon" id="sort-menu-toggler-icon"></span>
                             <ul id="sort-by-menu" class="drop-down-menu">
-                                <li class="sort-value" data-value="release_date.desc">New and Upcoming</li>
+                                <li class="sort-value" data-value="release_date.desc">New/Upcoming</li>
                                 <li class="sort-value" data-value="popularity.desc" selected>Most Popular</li>
                             </ul>
                         </div>
                         <div class="properties-drop-down">
                             <h4>Show:</h4>
-                            <span id="ratings-placeholder" class="drop-down-current-value" data-parameter="vote_count.desc">Highest To Lowest:</span>
-                            <span class="toggler-icon" id="ratings-menu-toggler-icon"></span>
+                            <span id="ratings-placeholder" class="drop-down-current-value" data-parameter="vote_count.desc">Highest To Lowest</span>
+                            <span class="toggler-icon toggler-icon--for-rating" id="ratings-menu-toggler-icon"></span>
                             <ul id="ratings-menu" class="drop-down-menu">
                                 <li class="ratings-value" data-value="vote_count.desc">Highest To Lowest</li>
                                 <li class="ratings-value" data-value="vote_count.asc">Lowest To Highest</li>
                             </ul>
                         </div>
-                        <div>
-                            <label for="sort-by-period">Based On Certain year:</label>
+                        <div class="search-by-year-container">
+                            <label for="sort-by-period">By Year:</label>
                             <input type="text" id="sort-byy-period" placeholder="Any..." class="drop-down-current-value text-input" data-parameter="primary_release_year=">
-                            <button class="clear-filters-button clear-filters-button__visible" id="clear-filters-button">Clear Filters</button>
+                            <button class="clear-year-filter-button" id="clear-year-filter-button">Reset</button>
                         </div>
                     </div>
-                    <div class="grid-container" id="landing-page">
+                    <div class="grid-container" id="landing-page-container">
                     </div>
                 </div>
             </div>
@@ -92,7 +92,7 @@
                 <div>
                     <div id="movies-search-field-container" class="search-field-container">
                         <form id="movies-search-form" class="search-field-container__form-section">
-                            <label for="movies-search-field">Search for Movies or Keep Browsing:</label>
+                            <label for="movies-search-field">Search for Movies:</label>
                             <input id="movies-search-field" type="text" autocomplete="off">
                             <div class="search-icon-container"><i class="fas fa-search"></i></div>
                         </form>
@@ -113,7 +113,7 @@
                 </div>
                 <div id="tvshows-results" class="grid-container"></div>
             </div>
-            <div id="celebs-container" class="celebs-container container visible-container">
+            <div id="celebs-container" class="celebs-container container">
                 <div>
                     <div id="celebs-search-field-container" class="search-field-container">
                         <form id="celebs-search-form" class="search-field-container__form-section">
@@ -124,24 +124,7 @@
                     </div>
                 </div>
                 <div id="celebs-results" class="rows-container">
-                    <div class="generic-celeb-container">
-                        <div class="generic-celeb-container__personal">
-                            <div class="generic-celeb-container__img">
-                                IMG
-                            </div>
-                        </div>
-                        <div class="generic-celeb-container__overview">
-                            <div class="generic-celeb-container__info">
-                                <p><span>name?</span> is Known for <span>acting?</span> with popularity of <span>popularity?.</span></p>
-                                <p>some of his most well known for movies include but not limited to: <span><a> href="known_for. forEach.linkToMovieUsingItsID+idtitle</a></span></p>
-                                <div class="generic-celeb-container__mini-movies">
-                                    <div></div>
-                                    <div></div>
-                                    <div></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+
                 </div>
             </div>
         </main>
@@ -158,7 +141,7 @@
                         <li>
                             <i class="side-bar-icon current-page fas fa-infinity">
                             </i>
-                            <span data-toggler-target="landing-page-container">
+                            <span data-toggler-target="browse-container">
                                 Browse
                             </span>
                         </li>
@@ -224,6 +207,7 @@
     <script src="src/js/helpers.js" type="module" defer></script>
     <script src="src/js/routingContent.js" defer></script>
     <script src="src/js/fetchingHelpers.js" type="module" defer></script>
+    <script src="src/js/app.js"></script>
 </body>
 
 </html>

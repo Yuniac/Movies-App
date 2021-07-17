@@ -36,11 +36,13 @@ main {
     scroll-behavior: smooth;
     .container {
         display: none;
-    }
-    .visible-container {
-        display: block;
-        width: 92%;
-        margin: 0 auto;
+        pointer-events: none;
+        &--visible {
+            pointer-events: visible;
+            display: block;
+            width: 92%;
+            margin: 0 auto;
+        }
     }
     .rating-container {
         display: flex;
@@ -114,18 +116,22 @@ main {
             font-size: $font-size-m;
         }
     }
+    // movies/tv shows container
     .grid-container {
         position: relative;
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
         grid-template-rows: auto;
         justify-items: center;
+        margin-top: 4rem;
     }
+    // celebs container
     .rows-container {
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
         align-items: stretch;
+        margin-top: 4rem;
         .generic-celeb-container {
             position: relative;
             display: flex;
@@ -166,7 +172,6 @@ main {
                 display: flex;
                 justify-content: space-evenly;
                 div {
-                    background-color: cyan;
                     height: 15rem;
                     width: 10rem;
                     margin: 0 1rem;
@@ -192,6 +197,23 @@ main {
                 text-align: center;
                 line-height: 3rem;
             }
+            &__celeb-movies-img-fall-safe {
+                background-color: $light-black-background-color;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                p {
+                    font-size: $font-size-s;
+                    text-align: center;
+                    line-height: 2;
+                }
+            }
+            &__link-to {
+                width: 100%;
+                height: 100%;
+                display: block;
+            }
+            ;
         }
     }
 }
@@ -252,12 +274,13 @@ main {
 }
 
 .landing-page-gallery {
-    width: clamp(1600px, 90%, 2200px);
+    width: clamp(1268px, 90%, 2200px);
+    min-height: 800px;
     &__sort-area {
         margin-bottom: 4rem;
         display: flex;
         justify-content: space-between;
-        width: clamp(260px, 80%, 90%);
+        // width: clamp(260px, 80%, 90%);
         @media (max-width: $break-point-lg) {
             min-width: 100%;
             margin: 0 auto 4rem;
@@ -265,8 +288,13 @@ main {
         }
         &>div {
             display: flex;
-            justify-content: space-between;
+            justify-content: space-around;
             align-items: center;
+            width: 221px;
+            padding-bottom: 40px;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
             @media (max-width: $break-point-lg) {
                 margin: 2rem 0;
             }
@@ -278,45 +306,61 @@ main {
         label {
             margin-right: 0.6rem;
         }
-        .text-input {
-            background-color: $main-black-background-color;
-            outline: none;
-            border: none;
-            border-bottom: 2px solid $main-grey-color;
-            text-indent: 1px;
-            margin: 0 0.7rem;
-            &:focus,
-            &:active {
-                outline: 1px solid $main-grey-color;
+        .search-by-year-container {
+            width: 359px;
+            .text-input {
+                background-color: $main-black-background-color;
+                outline: none;
+                border: none;
+                border-bottom: 2px solid $main-grey-color;
+                text-indent: 1px;
+                margin: 0 0.7rem;
+                &:focus,
+                &:active {
+                    outline: 1px solid $main-grey-color;
+                }
+                color: $main-white-color;
             }
-            color: $main-white-color;
-        }
-        .clear-filters-button {
-            background-color: transparent;
-            color: $main-grey-color;
-            border-radius: 1rem;
-            width: 4rem;
-            padding: 2px 0;
-            opacity: 0;
-            &__visible {
-                opacity: 1;
+            .clear-year-filter-button {
+                background-color: $main-golden-color;
+                color: $main-black-background-color;
+                font-weight: 600;
+                cursor: pointer;
+                border-radius: 1rem;
+                width: 4rem;
+                padding: 7px 0;
+                opacity: 0;
+                &__visible {
+                    opacity: 1;
+                }
             }
         }
         .properties-drop-down {
+            &--temporarily-disabled {
+                pointer-events: none;
+                span.drop-down-current-value {
+                    pointer-events: none;
+                    color: $light-black-background-color;
+                    cursor: not-allowed;
+                }
+            }
             position: relative;
             span {
                 color: $main-white-color;
             }
             .toggler-icon {
                 position: absolute;
-                right: -15px;
-                top: 15px;
+                top: 12px !important;
+                right: -6px !important;
                 width: 0;
                 height: 0;
                 border: 5px solid transparent;
                 border-top: 5px solid $main-grey-color;
                 color: red;
                 cursor: pointer;
+                &--for-rating {
+                    right: -12px !important;
+                }
             }
             .drop-down-current-value {
                 cursor: pointer;

@@ -1,3 +1,5 @@
+import { log } from ".";
+
 // show/hide main content of the website;
 const containers = document.querySelectorAll(".container");
 const containersTogglers = document.querySelectorAll("[data-toggler-target]");
@@ -8,13 +10,12 @@ containersTogglers.forEach(toggler => {
             if (container.id === e.target.dataset.togglerTarget) {
                 loadThisContainer(container)
             } else {
-                container.classList.remove("visible-container");
+                container.classList.remove("container--visible");
             }
         })
     })
 })
 
 function loadThisContainer(container) {
-    console.log(container)
-    container.classList.add("visible-container");
+    container.classList.add("container--visible");
 }

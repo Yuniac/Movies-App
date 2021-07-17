@@ -4,6 +4,8 @@ functions related to hiding/showing elements based on screen size, interactivity
 
 */
 
+import { log } from ".";
+
 // the notifications and messages boxes;
 toggleNotificationsBox("alerts", "alertsBox", "notifications-area__alerts-box--visible");
 toggleNotificationsBox("messages", "messagesBox", "notifications-area__messages-box--visible");
@@ -75,3 +77,12 @@ togglePopups();
 overlayDiv.addEventListener("click", () => {
     togglePopups();
 })
+
+// clear filters;
+// const flagToClearFilters = document.querySelector("#sort-byy-period");
+
+// const clearFiltersButton = document.querySelector("#clear-filters-button");
+// clearFiltersButton.addEventListener("click", () => {
+//     // if flagToClearFilters.dataset.
+//     console.log(flagToClearFilters);
+// })
