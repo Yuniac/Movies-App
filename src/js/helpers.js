@@ -4,8 +4,6 @@ functions related to hiding/showing elements based on screen size, interactivity
 
 */
 
-import { log } from ".";
-
 // the notifications and messages boxes;
 toggleNotificationsBox("alerts", "alertsBox", "notifications-area__alerts-box--visible");
 toggleNotificationsBox("messages", "messagesBox", "notifications-area__messages-box--visible");
@@ -66,7 +64,8 @@ showSortMenus("ratings-menu-toggler-icon", "ratings-menu", dropDownMenuTogglingC
 // any click on the overlay div means that it has been invoked by a popup somewhere on the page, so it will remove all enabling classes from all our elements that uses this feature;
 const sortMenu = document.getElementById("sort-by-menu");
 const ratingsMenu = document.getElementById("ratings-menu");
-export function togglePopups() {
+
+function togglePopups() {
     sideBarEl.classList.remove(sideBarTogglingCssClass);
     ratingsMenu.classList.remove(dropDownMenuTogglingCss);
     sortMenu.classList.remove(dropDownMenuTogglingCss);
@@ -77,12 +76,3 @@ togglePopups();
 overlayDiv.addEventListener("click", () => {
     togglePopups();
 })
-
-// clear filters;
-// const flagToClearFilters = document.querySelector("#sort-byy-period");
-
-// const clearFiltersButton = document.querySelector("#clear-filters-button");
-// clearFiltersButton.addEventListener("click", () => {
-//     // if flagToClearFilters.dataset.
-//     console.log(flagToClearFilters);
-// })

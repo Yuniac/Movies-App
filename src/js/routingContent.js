@@ -1,5 +1,3 @@
-import { log } from ".";
-
 // show/hide main content of the website;
 const containers = document.querySelectorAll(".container");
 const containersTogglers = document.querySelectorAll("[data-toggler-target]");
