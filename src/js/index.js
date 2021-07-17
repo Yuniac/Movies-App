@@ -5,11 +5,12 @@
 // import "core-js/stable";
 // import "regenerator-runtime/runtime";
 
-// import { togglePopups } from "./helpers"
+import { togglePopups } from "./helpers"
+
 
 const log = console.log
-log("once")
-    // the api link structure
+
+// the api link structure
 const apiKey = "?api_key=abb107c96224ec174a429b41fa17acda";
 
 const nowPlayingApiUrl = "https://api.themoviedb.org/3/movie/now_playing"
@@ -241,10 +242,10 @@ function makeHTMLContainers(whereToAppendElement, poster = true, mediaKind, data
             let mediaDetailsElement = document.createElement("p");
             // release date;
             let releaseDateElement = document.createElement("span");
-            if (data.release_date.length || data.release_date !== undefined) {
-                releaseDateElement.textContent = data.release_date.slice(0, 4) + " / ";
-            } else if (data.release_date === undefined) {
+            if (data.release_date === undefined) {
                 releaseDateElement.textContent = "Unkown Release Date"
+            } else if (data.release_date.length) {
+                releaseDateElement.textContent = data.release_date.slice(0, 4) + " / ";
             }
             mediaDetailsElement.append(releaseDateElement);
             // genres
@@ -395,25 +396,26 @@ function updateMoviesFilters(el, elTargetToUpdate) {
         })
     });
 }
-updateMoviesFilters(".sort-value", "#sort-by-placeholder", ".drop-down-current-value")
-updateMoviesFilters(".ratings-value", "#ratings-placeholder", ".drop-down-current-value")
-    // load more movies upon scrolling;
+updateMoviesFilters(".sort-value", "#sort-by-placeholder", ".drop-down-current-value");
+updateMoviesFilters(".ratings-value", "#ratings-placeholder", ".drop-down-current-value");
+
+// load more movies upon scrolling;
+let pageNumber = 2;
+
 function LoadMoreContentAfterScrolling() {
     const mainHTMLElement = document.querySelector("main");
     const whereToLodMoreMoviesIntoElement = document.querySelector("#browse-container")
     const loadMoreThreshold = 600;
     // pageNumber is which page should the api response with, now it returns the first page (page number 1) by default but after scrolling, if we don't change the page number we will get the same movies over and over;
-    let pageNumber = 2;
     mainHTMLElement.addEventListener("scroll", () => {
-
         if (mainHTMLElement.scrollTop + loadMoreThreshold > (mainHTMLElement.scrollHeight - mainHTMLElement.offsetHeight) && whereToLodMoreMoviesIntoElement.classList.contains("container--visible")) {
+            pageNumber++
             loadMoreMedia(pageNumber);
         }
     })
 
     function loadMoreMedia(pageNumber) {
         makeLandingPageMoviesBasadOnParameters(pageNumber)
-        pageNumber++
     }
 }
 // change what movies being shown in the landing page based on the parameters which we take from the dropdown menus;
@@ -451,7 +453,7 @@ function filterLandingPageMoviesBasedOnYear() {
             if (year < 1900 || year > 2030) {
                 noSearchWasFoundFallSafe(landingPageContainerElement);
             }
-            if (year === "" || year.length < 4) {
+            if (year === "" || year.length < 4 || isNaN(year)) {
                 this.classList.add("warn-invalid-query");
                 setTimeout(() => {
                     this.classList.remove("warn-invalid-query")
@@ -470,6 +472,7 @@ function filterLandingPageMoviesBasedOnYear() {
         landingPageContainerElement.innerHTML = "";
         textInputElement.value = "";
         textInputElement.dataset.parameter = "2021"
+        pageNumber = 1;
         makeLandingPageMovies("popularity.desc", "vote_count.desc", "2021", 1)
         clearYearFiltersButton.classList.remove("clear-year-filter-button__visible")
         sortingByDropDowns.forEach(dropDownMenu => dropDownMenu.classList.remove("properties-drop-down--temporarily-disabled"))

@@ -3,6 +3,9 @@
 header {
     margin: 2rem auto 4.5rem;
     width: 92%;
+    @media (max-width: $break-point-m) {
+        width: 100%;
+    }
     display: flex;
     justify-content: space-between;
     align-items: center;

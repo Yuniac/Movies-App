@@ -65,7 +65,7 @@ showSortMenus("ratings-menu-toggler-icon", "ratings-menu", dropDownMenuTogglingC
 const sortMenu = document.getElementById("sort-by-menu");
 const ratingsMenu = document.getElementById("ratings-menu");
 
-function togglePopups() {
+export function togglePopups() {
     sideBarEl.classList.remove(sideBarTogglingCssClass);
     ratingsMenu.classList.remove(dropDownMenuTogglingCss);
     sortMenu.classList.remove(dropDownMenuTogglingCss);

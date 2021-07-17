@@ -1,4 +1,5 @@
 // show/hide main content of the website;
+import { togglePopups } from "./helpers"
 const containers = document.querySelectorAll(".container");
 const containersTogglers = document.querySelectorAll("[data-toggler-target]");
 
@@ -16,4 +17,5 @@ containersTogglers.forEach(toggler => {
 
 function loadThisContainer(container) {
     container.classList.add("container--visible");
+    togglePopups()
 }
