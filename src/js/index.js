@@ -205,12 +205,16 @@ function makeCallToActionHTML(data) {
     callToActionContainerElement.classList.add("call-to-action-container");
 
     let addToWatchListElement = document.createElement("i");
-    if (arrayToStoreUserWatchList.indexOf(data) !== -1 && arrayToStoreUserWatchList.length !== 0) {
+    // let flag = arrayToStoreUserWatchList.map(movie => movie.id) === data.id
+    addToWatchListElement.dataset.id = data.id
+
+    // log(flag);
+    let indexOfAnExistingMovie = arrayToStoreUserWatchList.map(item => item.id).indexOf(data.id);
+    if (indexOfAnExistingMovie >= 0) {
         addToWatchListElement.classList.add("call-to-action-container__watch-later--checked", "fas", "fa-plus");
     } else {
         addToWatchListElement.classList.add("call-to-action-container__watch-later", "fas", "fa-plus");
     }
-    addToWatchListElement.dataset.id = data.id
     addToWatchListElement.addEventListener("click", callToActionInteractivity(addToWatchListElement));
     let addToMyRatingsElement = document.createElement("i");
     addToMyRatingsElement.classList.add("call-to-action-container__my-rating", "fas", "fa-star");
@@ -232,7 +236,6 @@ function callToActionInteractivity(el) {
                 updateCurrentlyVisibleMovies();
             } else if (arrayToStoreUserWatchList.indexOf(movie) !== -1 && movie.id === Number(el.dataset.id)) {
                 arrayToStoreUserWatchList.splice(arrayToStoreUserWatchList.indexOf(movie), 1)
-                    // el.classList.remove("call-to-action-container__my-rating--checked")
                 updateUserLists(watchListContainerElement, arrayToStoreUserWatchList);
                 updateCurrentlyVisibleMovies();
             }
@@ -248,9 +251,15 @@ function updateUserLists(whereToAppendElement, arrayOfData) {
 
 function updateCurrentlyVisibleMovies() {
     landingPageContainerElement.innerHTML = "";
-    arrayToStoreAllMoviesBeingViewedInJson.forEach(movie => {
-        makeHTMLContainers(landingPageContainerElement, true, "movie", movie);
-    })
+    // if this button is visible then the user is searching for movies based on a year, which requries different behavior if he wants to add to his watchlist/fav;
+    if (clearYearFiltersButton.classList.contains("clear-year-filter-button__visible")) {
+        makeLandingPageMoviesBasadOnParameters(1)
+    } else {
+        arrayToStoreAllMoviesBeingViewedInJson.forEach(movie => {
+            makeHTMLContainers(landingPageContainerElement, true, "movie", movie);
+        })
+    }
+
 
 }
 /* 
@@ -578,6 +587,7 @@ function mainSearchFunction() {
                     .then(response => response.json())
                     .then(searchResultInJson => {
                         validateSearchResult(searchResultInJson, tvSearchResultsElement);
+                        arrayToStoreAllMoviesBeingViewedInJson.push(...searchResultInJson)
                         searchResultInJson.forEach(tvShow => {
                             makeHTMLContainers(whereToAppendElement, true, mediaKind, tvShow.show);
                         })
@@ -590,6 +600,7 @@ function mainSearchFunction() {
                         .then(response => response.json())
                         .then(searchResultInJson => {
                             validateSearchResult(searchResultInJson.results, moveisSearchResultElement);
+                            arrayToStoreAllMoviesBeingViewedInJson.push(...searchResultInJson.results)
                             if (searchResultInJson.results) {
                                 searchResultInJson.results.forEach(movie => {
                                     makeHTMLContainers(whereToAppendElement, true, mediaKind, movie);
