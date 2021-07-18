@@ -77,3 +77,37 @@ body {
         line-height: 3rem;
     }
 }
+
+.call-to-action-container {
+    position: absolute;
+    right: -1px;
+    top: 2px;
+    width: 4rem;
+    height: 1.5rem;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 200ms ease-in;
+    font-size: 22px;
+    color: invert($main-grey-color);
+    &__watch-later {
+        padding: 0 4px;
+        width: 24px;
+        height: 24px;
+        cursor: pointer;
+        &--checked {
+            color: $main-golden-color;
+            cursor: pointer;
+        }
+    }
+    &__my-rating {
+        width: 24px;
+        height: 24px;
+        cursor: pointer;
+        &--checked {
+            color: $main-golden-color;
+            cursor: pointer;
+        }
+    }
+}

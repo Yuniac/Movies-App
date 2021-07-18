@@ -88,6 +88,12 @@
                     </div>
                 </div>
             </div>
+            <div id="watchlist-container" class="watchlist-container container ">
+                <div class="watchlist-container__heading">
+                    <h2>Your Watchlist</h2>
+                </div>
+                <div id="watch-list" class="grid-container"></div>
+            </div>
             <div id="movies-container" class="movies-container container">
                 <div>
                     <div id="movies-search-field-container" class="search-field-container">
@@ -148,7 +154,7 @@
                         <li>
                             <i class="side-bar-icon fas fa-stream">
                             </i>
-                            <span>
+                            <span data-toggler-target="watchlist-container">
                                 Watchlist
                             </span>
                         </li>
@@ -160,7 +166,7 @@
                         </li>
                     </ul>
                 </div>
-                <div class="side-bar__menu side-categories">
+                <div class="side-bar__menu">
                     <ul>
                         <h5>Search For</h5>
                         <li>
@@ -204,7 +210,7 @@
     </div>
     <div id="overlay-div" class="overlay-div"></div>
     <script src="src/js/index.js"></script>
-    <script src="src/js/helpers.js"></script>
+    <script src="src/js/helpers.js" type="module"></script>
     <script src="src/js/routingContent.js"></script>
 </body>
 

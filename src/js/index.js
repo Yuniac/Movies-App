@@ -7,11 +7,11 @@
 
 import { togglePopups } from "./helpers"
 
-
-const log = console.log
-
+const log = console.log;
 // the api link structure
 const apiKey = "?api_key=abb107c96224ec174a429b41fa17acda";
+let arrayToStoreAllMoviesBeingViewedInJson = [];
+let arrayToStoreUserWatchList = [];
 
 const nowPlayingApiUrl = "https://api.themoviedb.org/3/movie/now_playing"
 const discoverMovieApiUrl = " https://api.themoviedb.org/3/discover/movie"
@@ -25,6 +25,7 @@ const celebsSearchApiUrl = "https://api.themoviedb.org/3/search/person";
 
 const nowPlayingContainerElement = document.querySelector("#now-playing-container");
 const landingPageContainerElement = document.querySelector("#landing-page-container");
+const watchListContainerElement = document.querySelector("#watch-list")
 
 /* 
     helpers functions related to doing small tasks;
@@ -199,6 +200,59 @@ function makeInTheaterNowMovies() {
         .catch((e) => console.log(e));
 };
 
+function makeCallToActionHTML(data) {
+    let callToActionContainerElement = document.createElement("div");
+    callToActionContainerElement.classList.add("call-to-action-container");
+
+    let addToWatchListElement = document.createElement("i");
+    if (arrayToStoreUserWatchList.indexOf(data) !== -1 && arrayToStoreUserWatchList.length !== 0) {
+        addToWatchListElement.classList.add("call-to-action-container__watch-later--checked", "fas", "fa-plus");
+    } else {
+        addToWatchListElement.classList.add("call-to-action-container__watch-later", "fas", "fa-plus");
+    }
+    addToWatchListElement.dataset.id = data.id
+    addToWatchListElement.addEventListener("click", callToActionInteractivity(addToWatchListElement));
+    let addToMyRatingsElement = document.createElement("i");
+    addToMyRatingsElement.classList.add("call-to-action-container__my-rating", "fas", "fa-star");
+    addToMyRatingsElement.dataset.id = data.id
+
+
+    callToActionContainerElement.append(addToWatchListElement);
+    callToActionContainerElement.append(addToMyRatingsElement);
+    return callToActionContainerElement
+}
+
+function callToActionInteractivity(el) {
+    el.addEventListener("click", () => {
+        arrayToStoreAllMoviesBeingViewedInJson.forEach(movie => {
+            if (movie.id === Number(el.dataset.id) && arrayToStoreUserWatchList.indexOf(movie) === -1) {
+                arrayToStoreUserWatchList.push(movie);
+                el.classList.add("call-to-action-container__my-rating--checked")
+                updateUserLists(watchListContainerElement, arrayToStoreUserWatchList);
+                updateCurrentlyVisibleMovies();
+            } else if (arrayToStoreUserWatchList.indexOf(movie) !== -1 && movie.id === Number(el.dataset.id)) {
+                arrayToStoreUserWatchList.splice(arrayToStoreUserWatchList.indexOf(movie), 1)
+                    // el.classList.remove("call-to-action-container__my-rating--checked")
+                updateUserLists(watchListContainerElement, arrayToStoreUserWatchList);
+                updateCurrentlyVisibleMovies();
+            }
+        })
+    })
+}
+
+function updateUserLists(whereToAppendElement, arrayOfData) {
+    whereToAppendElement.innerHTML = "";
+    log(arrayToStoreUserWatchList)
+    arrayOfData.forEach(movie => makeHTMLContainers(whereToAppendElement, true, "movie", movie));
+}
+
+function updateCurrentlyVisibleMovies() {
+    landingPageContainerElement.innerHTML = "";
+    arrayToStoreAllMoviesBeingViewedInJson.forEach(movie => {
+        makeHTMLContainers(landingPageContainerElement, true, "movie", movie);
+    })
+
+}
 /* 
     functions which will fetch data/update the page content;
 */
@@ -270,6 +324,8 @@ function makeHTMLContainers(whereToAppendElement, poster = true, mediaKind, data
 
             adjcentContainer.append(mediaNameElement)
         }
+        let actionsContainerElement = makeCallToActionHTML(data);
+        containerElement.append(actionsContainerElement);
         whereToAppendElement.append(containerElement);
     } else if (mediaKind === "tvshow") {
         let containerElement = document.createElement("div");
@@ -405,7 +461,7 @@ let pageNumber = 2;
 function LoadMoreContentAfterScrolling() {
     const mainHTMLElement = document.querySelector("main");
     const whereToLodMoreMoviesIntoElement = document.querySelector("#browse-container")
-    const loadMoreThreshold = 600;
+    const loadMoreThreshold = 100;
     // pageNumber is which page should the api response with, now it returns the first page (page number 1) by default but after scrolling, if we don't change the page number we will get the same movies over and over;
     mainHTMLElement.addEventListener("scroll", () => {
         if (mainHTMLElement.scrollTop + loadMoreThreshold > (mainHTMLElement.scrollHeight - mainHTMLElement.offsetHeight) && whereToLodMoreMoviesIntoElement.classList.contains("container--visible")) {
@@ -436,6 +492,7 @@ function makeLandingPageMovies(properties = "popularity.desc", rating = "vote_co
     fetch(discoverMoviesFetchUrl)
         .then(res => res.json())
         .then(json => {
+            arrayToStoreAllMoviesBeingViewedInJson.push(...json.results);
             json.results.forEach(movie => {
                 makeHTMLContainers(landingPageContainerElement, true, "movie", movie);
             })
@@ -443,17 +500,18 @@ function makeLandingPageMovies(properties = "popularity.desc", rating = "vote_co
 }
 
 // show only movies based on a certian year;
+const textInputElement = document.querySelector("#sort-byy-period");
+const clearYearFiltersButton = document.querySelector("#clear-year-filter-button");
+const sortingByDropDowns = document.querySelectorAll(".properties-drop-down");
+
 function filterLandingPageMoviesBasedOnYear() {
-    const textInputElement = document.querySelector("#sort-byy-period");
-    const clearYearFiltersButton = document.querySelector("#clear-year-filter-button");
-    const sortingByDropDowns = document.querySelectorAll(".properties-drop-down");
     textInputElement.addEventListener("keyup", function(e) {
         if (e.key === "Enter") {
             let year = Number(this.value)
             if (year < 1900 || year > 2030) {
                 noSearchWasFoundFallSafe(landingPageContainerElement);
             }
-            if (year === "" || year.length < 4 || isNaN(year)) {
+            if (year === "" || year.length < 4) {
                 this.classList.add("warn-invalid-query");
                 setTimeout(() => {
                     this.classList.remove("warn-invalid-query")
@@ -519,11 +577,11 @@ function mainSearchFunction() {
                 fetch(urlToFetch)
                     .then(response => response.json())
                     .then(searchResultInJson => {
-                        log(searchResultInJson)
                         validateSearchResult(searchResultInJson, tvSearchResultsElement);
                         searchResultInJson.forEach(tvShow => {
                             makeHTMLContainers(whereToAppendElement, true, mediaKind, tvShow.show);
                         })
+                        arrayToStoreAllMoviesBeingViewedInJson.push(...searchResultInJson);
                     }).catch(e => console.log(e))
             } else if (mediaKind === "movie") {
                 if (searchQuery.length) {
@@ -531,12 +589,13 @@ function mainSearchFunction() {
                     fetch(urlToFetch)
                         .then(response => response.json())
                         .then(searchResultInJson => {
-                            validateSearchResult(searchResultInJson.results, moveisSearchResultElement)
+                            validateSearchResult(searchResultInJson.results, moveisSearchResultElement);
                             if (searchResultInJson.results) {
                                 searchResultInJson.results.forEach(movie => {
                                     makeHTMLContainers(whereToAppendElement, true, mediaKind, movie);
                                 })
                             }
+                            arrayToStoreAllMoviesBeingViewedInJson.push(...searchResultInJson.results);
                         }).catch(e => console.log(e))
                 }
             } else {
@@ -582,8 +641,9 @@ function noSearchWasFoundFallSafe(whereToAppendElement) {
     whereToAppendElement.append(warnningContainerElement)
 }
 
-LoadMoreContentAfterScrolling()
+
 makeLandingPageMovies()
 makeInTheaterNowMovies()
 filterLandingPageMoviesBasedOnYear()
 mainSearchFunction();
+LoadMoreContentAfterScrolling()

@@ -24,22 +24,17 @@ function toggleNotificationsBox(el, elBox, css) {
 
 
 // the side bar hiding/showing based on the size of the screen;
-let sideBarToggler = document.querySelector("#toggle-side-bar");
-let sideBarEl = document.querySelector(".side-bar");
-let overlayDiv = document.querySelector("#overlay-div");
+const sideBarToggler = document.querySelector("#toggle-side-bar");
+const sideBarEl = document.querySelector(".side-bar");
+const overlayDiv = document.querySelector("#overlay-div");
 
-let overlayDivTogglingCssClass = "overlay-div__overlay--modifier";
-let sideBarTogglingCssClass = "side-bar-visible";
+const overlayDivTogglingCssClass = "overlay-div__overlay--modifier";
+const sideBarTogglingCssClass = "side-bar-visible";
 
 sideBarToggler.addEventListener("click", () => {
     sideBarEl.classList.add(sideBarTogglingCssClass)
     overlayDiv.classList.add(overlayDivTogglingCssClass)
 })
-
-// the hover effects on the movies posters;
-function hoverOverMovieEffect() {
-
-}
 
 // the sort by drop-down menus: using native 'select' and 'datalist' HTML elements was problematic because each browser renders them differently and there is no way to style them all consistently. So, I'm going to use custom HTML/CSS/JS to get the same result;
 function showSortMenus(el, elTarget, css) {

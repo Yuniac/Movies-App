@@ -78,6 +78,9 @@ main {
         background-size: cover;
         background-position: center;
         border-radius: $border-radius-1;
+        &:hover .call-to-action-container {
+            opacity: 1;
+        }
         &__description-css {
             position: absolute;
             height: 3.8rem;
@@ -119,104 +122,105 @@ main {
             font-size: $font-size-m;
         }
     }
-    // movies/tv shows container
-    .grid-container {
+}
+
+// movies/tv shows container
+.grid-container {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-rows: auto;
+    justify-items: center;
+    margin-top: 4rem;
+}
+
+// celebs container
+.rows-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    margin-top: 4rem;
+    .generic-celeb-container {
         position: relative;
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        grid-template-rows: auto;
-        justify-items: center;
-        margin-top: 4rem;
-    }
-    // celebs container
-    .rows-container {
         display: flex;
-        flex-direction: column;
         justify-content: flex-start;
-        align-items: stretch;
-        margin-top: 4rem;
-        .generic-celeb-container {
+        align-items: flex-start;
+        width: 100%;
+        width: 100%;
+        background-color: $light-black-background-color;
+        height: 30rem;
+        margin: 2rem 0;
+        &__personal {
+            width: clamp(100px, 30%, 450px);
+            height: 100%;
             position: relative;
+        }
+        &__img {
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+            width: clamp(250px, 100%, 100%);
+            height: 100%;
+        }
+        &__overview {
+            width: 100%;
+            p {
+                font-size: 2rem;
+                word-wrap: anywhere;
+                padding: 0.5rem 2rem 2rem;
+                max-width: 860px;
+            }
+        }
+        &__identifier {
+            color: $main-golden-color;
+            font-weight: 500;
+            margin-right: auto;
+        }
+        &__mini-movies {
             display: flex;
-            justify-content: flex-start;
-            align-items: flex-start;
-            width: 100%;
-            width: 100%;
-            background-color: $light-black-background-color;
-            height: 30rem;
-            margin: 2rem 0;
-            &__personal {
-                width: clamp(100px, 30%, 450px);
-                height: 100%;
-                position: relative;
-            }
-            &__img {
-                background-repeat: no-repeat;
+            justify-content: space-evenly;
+            div {
+                height: 15rem;
+                width: 10rem;
+                margin: 0 1rem;
                 background-position: center;
-                background-size: cover;
-                width: clamp(250px, 100%, 100%);
-                height: 100%;
+                background-size: contain;
+                background-repeat: no-repeat;
             }
-            &__overview {
-                width: 100%;
-                p {
-                    font-size: 2rem;
-                    word-wrap: anywhere;
-                    padding: 0.5rem 2rem 2rem;
-                    max-width: 860px;
-                }
-            }
-            &__identifier {
-                color: $main-golden-color;
-                font-weight: 500;
-                margin-right: auto;
-            }
-            &__mini-movies {
-                display: flex;
-                justify-content: space-evenly;
-                div {
-                    height: 15rem;
-                    width: 10rem;
-                    margin: 0 1rem;
-                    background-position: center;
-                    background-size: contain;
-                    background-repeat: no-repeat;
-                }
-            }
-            &__celeb-background-img-fall-safe {
-                position: absolute;
-                top: 0;
-                right: 0;
-                bottom: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background-color: $light-black-background-color;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                font-family: Arial, Helvetica, sans-serif;
-                font-size: $font-size-m;
+        }
+        &__celeb-background-img-fall-safe {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: $light-black-background-color;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: $font-size-m;
+            text-align: center;
+            line-height: 3rem;
+        }
+        &__celeb-movies-img-fall-safe {
+            background-color: $light-black-background-color;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            p {
+                font-size: $font-size-s;
                 text-align: center;
-                line-height: 3rem;
+                line-height: 2;
             }
-            &__celeb-movies-img-fall-safe {
-                background-color: $light-black-background-color;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                p {
-                    font-size: $font-size-s;
-                    text-align: center;
-                    line-height: 2;
-                }
-            }
-            &__link-to {
-                width: 100%;
-                height: 100%;
-                display: block;
-            }
-            ;
+        }
+        &__link-to {
+            width: 100%;
+            height: 100%;
+            display: block;
         }
     }
 }
@@ -494,6 +498,15 @@ main {
                 right: -15px;
             }
         }
+    }
+}
+
+.watchlist-container {
+    &__heading {
+        margin-bottom: 8rem;
+        color: $main-golden-color;
+        text-align: center;
+        font-size: $font-size-l;
     }
 }
 
