@@ -46,6 +46,9 @@
             }
             li {
                 width: 9.5rem;
+                @media (min-width: $break-point-lg) {
+                    width: 14rem;
+                }
                 padding: 1rem 0;
                 display: flex;
                 justify-content: space-between;
@@ -55,6 +58,9 @@
                     left: -6px;
                 }
                 span {
+                    @media (min-width: $break-point-lg) {
+                        width: 9rem;
+                    }
                     &:hover {
                         color: $main-white-color;
                         cursor: pointer;
@@ -63,19 +69,24 @@
                 &:hover .side-bar-icon {
                     color: $main-golden-color;
                 }
-                &.dormant-icon {
-                    margin-top: 7rem;
-                    color: $main-dark-grey-color;
-                    &:hover span,
-                    .side-bar__menu ul li:hover {
-                        position: static;
-                        color: inherit;
-                        cursor: default;
+            }
+            i {
+                &.current-page {
+                    color: $main-golden-color;
+                }
+            }
+        }
+        &__credits-icons {
+            li {
+                cursor: pointer;
+                &:hover {
+                    i:first-of-type {
+                        color: $s-pink-color;
                     }
                 }
-                i {
-                    &.current-page {
-                        color: $main-golden-color;
+                &:last-of-type:hover {
+                    i:last-of-type {
+                        color: $s-cyan-color;
                     }
                 }
             }

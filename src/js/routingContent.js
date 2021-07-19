@@ -6,8 +6,8 @@ const containersTogglers = document.querySelectorAll("[data-toggler-target]");
 containersTogglers.forEach(toggler => toggler.addEventListener("click", highLightCurrentPage))
 
 function highLightCurrentPage() {
-    // the side menu icons, when clicking them:
-    // 1) hide all containers and only show the one which represnts the icon that got clicked.
+    // the side menu icons, when clicking on one of them:
+    // 1) hide all html content containers and only show the one which represnts the icon that got clicked.
     // 2) remove the highlighting class from all the icons and only add it to the icon which represnts the current page/container which we are in.
     containersTogglers.forEach(toggler => {
         toggler.addEventListener("click", showTheCorrectPage(event))

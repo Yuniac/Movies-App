@@ -17,7 +17,8 @@ const linkToPerson = "https://www.themoviedb.org/person/";
 const linkToAMovieUsingItsID = "https://www.themoviedb.org/movie/";
 
 
-const tvSearchApiUrl = "https://api.tvmaze.com/search/shows?q=";
+// const tvSearchApiUrl = "https://api.tvmaze.com/search/shows?q=";
+const tvSearchApiUrl = "https://api.themoviedb.org/3/search/tv"
 const moviesSearchApiUrl = "https://api.themoviedb.org/3/search/movie";
 const celebsSearchApiUrl = "https://api.themoviedb.org/3/search/person";
 
@@ -34,12 +35,9 @@ const loadThisMovieContainerElement = document.querySelector("#current-media-con
 const baseImgUrl = "https://image.tmdb.org/t/p/";
 
 function makeMediaImg(mediaKind, imgSize, imgPath, data) {
-    if (mediaKind === "movie" || mediaKind === "mini-movie") {
+    if (mediaKind === "media" || mediaKind === "mini-media") {
         let backgroundImgURL = baseImgUrl + imgSize + imgPath
         return backgroundImgURL
-    }
-    if (mediaKind === "tvshow") {
-        return data.image.original
     }
     if (mediaKind === "celebs") {
         let backgroundImgURL = baseImgUrl + imgSize + data.profile_path
@@ -53,7 +51,7 @@ const allMoviesGenres = [{ "id": 28, "name": "Action" }, { "id": 12, "name": "Ad
 // this function will make and return the genres and the html needed for the them;
 function makeGenres(mediaKind, data) {
     let genresElement = document.createElement("span");
-    if (mediaKind === "movie") {
+    if (mediaKind === "media") {
         // if no genres;
         if (!data.genre_ids.length) {
             genresElement.textContent = "Unknown Genre"
@@ -103,22 +101,7 @@ function makeRating(mediaKind, data) {
         } else {
             ratingElement.textContent = "N/A"
         }
-    } else if (mediaKind === "tvshow") {
-        if (data.rating.average) {
-            // we only want to show the first digit in the rating, no floating rating numbers;
-            // rating comes as a number;
-            let rating = Math.round(data.rating.average);
-            let ratingString = String(rating);
-            // check its length, if it has two digits or more (which is the case with floating numbers ratings like: 7.1) then remove everything but the first number.
-            // we made the number a string earlier so we can work with it;
-            ratingString > 1 ? ratingElement.textContent = ratingString.slice(0, 1) : null
-        } else {
-            ratingElement.textContent = "N/A"
-        }
-    } else {
-        return
     }
-
     ratingElementContainer.append(ratingElement)
     return ratingElementContainer;
 }
@@ -194,7 +177,7 @@ function makeInTheaterNowMovies() {
         .then(res => res.json())
         .then(moviesArray => {
             moviesArray = shuffleArray(moviesArray.results)
-            for (let i = 0; i < 2; i++) makeHTMLContainers(nowPlayingContainerElement, false, "movie", moviesArray[i])
+            for (let i = 0; i < 2; i++) makeHTMLContainers(nowPlayingContainerElement, false, "media", moviesArray[i])
         })
         .catch((e) => console.log(e));
 };
@@ -202,30 +185,20 @@ function makeInTheaterNowMovies() {
 /* 
     functions which will fetch data/update the page content;
 */
-// function loadThisMovie(data, mediaKind) {
-//     debugger
-//     return () => {
-//         const loadThisMovie = document.querySelector("#current-movie")
-
-//         makeHTMLContainers(loadThisMovie, true, mediaKind, data)
-//     }
-
-// }
 
 // this function will create and append a fitting div for each movie based on its arguments;
 function makeHTMLContainers(whereToAppendElement, poster = true, mediaKind, data) {
-    if (mediaKind === "movie") {
+    if (mediaKind === "media") {
         let containerElement = document.createElement("div");
         let adjcentContainer = document.createElement("div");
 
         containerElement.append(adjcentContainer);
-        containerElement.dataset.movieId = data.id
-            // poster vs backdrop image, different css/size, etc;
+        // poster vs backdrop image, different css/size, etc;
         if (poster) {
             containerElement.classList.add("generic-media-container");
             adjcentContainer.classList.add("generic-media-container__description-css");
             if (data.poster_path !== null) {
-                let backgroundImageLink = makeMediaImg("movie", "w780", data.poster_path, null);
+                let backgroundImageLink = makeMediaImg(mediaKind, "w780", data.poster_path, null);
                 let backgroundImageLinkInCssFormat = "url('" + backgroundImageLink + "')";
                 containerElement.style.backgroundImage = backgroundImageLinkInCssFormat;
             } else {
@@ -265,7 +238,7 @@ function makeHTMLContainers(whereToAppendElement, poster = true, mediaKind, data
             containerElement.classList.add("now-playing__movie");
             adjcentContainer.classList.add("now-playing__overlay-css");
 
-            let backgroundImageLink = makeMediaImg("movie", "w1280", data.backdrop_path);
+            let backgroundImageLink = makeMediaImg(mediaKind, "w1280", data.backdrop_path);
             let backgroundImageLinkInCssFormat = "url('" + backgroundImageLink + "')";
 
             containerElement.style.backgroundImage = backgroundImageLinkInCssFormat;
@@ -292,11 +265,8 @@ function makeHTMLContainers(whereToAppendElement, poster = true, mediaKind, data
         let bannerElement = document.createElement("div");
         bannerElement.classList.add("current-movie__banner")
         if (data.backdrop_path !== null && data.backdrop_path !== undefined) {
-            let backgroundImageLink = makeMediaImg("movie", "w1280", data);
-            let backgroundImageLinkInCssFormat = "url('" + backgroundImageLink + "')";
-            bannerElement.style.backgroundImage = backgroundImageLinkInCssFormat;
-        } else if (data.image) {
-            let backgroundImageLink = makeMediaImg("tvshow", "w1280", null, data);
+
+            let backgroundImageLink = makeMediaImg("media", "w1280", data.backdrop_path, data);
             let backgroundImageLinkInCssFormat = "url('" + backgroundImageLink + "')";
             bannerElement.style.backgroundImage = backgroundImageLinkInCssFormat;
         } else {
@@ -323,59 +293,6 @@ function makeHTMLContainers(whereToAppendElement, poster = true, mediaKind, data
         whereToAppendElement.append(descriptionContainer);
         whereToAppendElement.append(detailsElementContiner);
         // containerElement.addEventListener("click", loadThisMovie(data, "movie-preview"))
-    } else if (mediaKind === "tvshow") {
-        let containerElement = document.createElement("div");
-        let adjcentContainer = document.createElement("div");
-
-        containerElement.append(adjcentContainer);
-
-        containerElement.classList.add("generic-media-container");
-        adjcentContainer.classList.add("generic-media-container__description-css");
-        if (data.image) {
-            let backgroundImageLink = makeMediaImg("tvshow", null, null, data);
-            let backgroundImageLinkInCssFormat = "url('" + backgroundImageLink + "')";
-            containerElement.style.backgroundImage = backgroundImageLinkInCssFormat;
-        } else {
-            let backgroundImageFallSafeElement = document.createElement("div");
-            backgroundImageFallSafeElement.classList.add("generic-media-container__background-img-fall-safe")
-            let noBackgroundText = document.createElement("p");
-            noBackgroundText.textContent = "No Poster 404";
-            backgroundImageFallSafeElement.append(noBackgroundText);
-
-            containerElement.append(backgroundImageFallSafeElement);
-        }
-        let mediaNameElementContainer = document.createElement("div");
-        mediaNameElementContainer.classList.add("rating-container");
-
-        let mediaNameElement = document.createElement("h4");
-        mediaNameElement.textContent = data.name
-        mediaNameElementContainer.append(mediaNameElement);
-        mediaNameElementContainer.append(makeRating("tvshow", data))
-
-        let mediaDetailsElement = document.createElement("p");
-        // release date;
-        let releaseDateElement = document.createElement("span");
-        if (data.premiered !== null) {
-            releaseDateElement.textContent = data.premiered.slice(0, 4) + " / ";
-        } else {
-            releaseDateElement.textContent = "Unkown Release Date / "
-        }
-        mediaDetailsElement.append(releaseDateElement);
-        // genres
-        mediaDetailsElement.append(makeGenres("tvshow", data))
-
-        adjcentContainer.append(mediaDetailsElement);
-        adjcentContainer.append(mediaNameElementContainer)
-        adjcentContainer.append(mediaNameElementContainer)
-        containerElement.addEventListener("click", () => {
-            const loadThisMovieContainerElement = document.querySelector("#current-movie")
-            loadThisMovieContainerElement.innerHTML = "";
-            loadThisMovieContainerElement.classList.add("current-movie--visible");
-            makeHTMLContainers(loadThisMovieContainerElement, false, "movie-preview", data);
-            const overlayDiv = document.querySelector("#overlay-div");
-            overlayDiv.classList.add("overlay-div__overlay--modifier");
-        })
-        whereToAppendElement.append(containerElement);
     } else if (mediaKind === "celebs") {
         let containerElement = document.createElement("div");
         containerElement.classList.add("generic-celeb-container");
@@ -413,7 +330,7 @@ function makeHTMLContainers(whereToAppendElement, poster = true, mediaKind, data
     } else if (mediaKind === "mini-media") {
         if (data.poster_path !== null && data.poster_path !== undefined) {
             let containerElement = document.createElement("div");
-            let backgroundImageLink = makeMediaImg("mini-movie", "w342", data.poster_path, data);
+            let backgroundImageLink = makeMediaImg(mediaKind, "w342", data.poster_path, data);
             let backgroundImageLinkInCssFormat = "url('" + backgroundImageLink + "')";
             containerElement.style.backgroundImage = backgroundImageLinkInCssFormat;
             let linkToMovieElement = document.createElement("a");
@@ -432,7 +349,6 @@ function makeHTMLContainers(whereToAppendElement, poster = true, mediaKind, data
             whereToAppendElement.append(backgroundImageFallSafeElement)
         }
     }
-
 }
 
 // update the drop down menus values, I could have added this with the next sibiling function which uses the same values to fetch new movies but it proved more complicated/annoying than i thought it would be so i ended up splitting them in two separate functions;
@@ -480,7 +396,6 @@ function makeLandingPageMoviesBasadOnParameters(pageNumber) {
     makeLandingPageMovies(sortBy.dataset.parameter, rating.dataset.parameter, year.dataset.parameter, pageNumber);
 };
 
-
 // fetch the landing page movies and make the html needed for them;
 function makeLandingPageMovies(properties = "popularity.desc", rating = "vote_count.desc", specificYear = "2021", pageNumber = 1) {
     const sortBy = "&sort_by=";
@@ -492,7 +407,7 @@ function makeLandingPageMovies(properties = "popularity.desc", rating = "vote_co
         .then(res => res.json())
         .then(json => {
             json.results.forEach(movie => {
-                makeHTMLContainers(landingPageContainerElement, true, "movie", movie);
+                makeHTMLContainers(landingPageContainerElement, true, "media", movie);
             })
         }).catch((e) => console.trace(e))
 }
@@ -572,13 +487,14 @@ function mainSearchFunction() {
         function searchForMedia(searchQuery, mediaKind, whereToAppendElement) {
 
             if (mediaKind === "tvshow") {
-                let urlToFetch = tvSearchApiUrl + searchQuery
+                let urlToFetch = tvSearchApiUrl + apiKey + querySymbol + searchQuery
                 fetch(urlToFetch)
                     .then(response => response.json())
                     .then(searchResultInJson => {
-                        validateSearchResult(searchResultInJson, tvSearchResultsElement);
-                        searchResultInJson.forEach(tvShow => {
-                            makeHTMLContainers(whereToAppendElement, true, mediaKind, tvShow.show);
+                        validateSearchResult(searchResultInJson.results, tvSearchResultsElement);
+                        searchResultInJson.results.forEach(tvShow => {
+                            debugger
+                            makeHTMLContainers(whereToAppendElement, true, "media", tvShow);
                         })
                     }).catch(e => console.log(e))
             } else if (mediaKind === "movie") {
@@ -590,7 +506,7 @@ function mainSearchFunction() {
                             validateSearchResult(searchResultInJson.results, moveisSearchResultElement);
                             if (searchResultInJson.results) {
                                 searchResultInJson.results.forEach(movie => {
-                                    makeHTMLContainers(whereToAppendElement, true, mediaKind, movie);
+                                    makeHTMLContainers(whereToAppendElement, true, "media", movie);
                                 })
                             }
                         }).catch(e => console.log(e))
@@ -638,9 +554,12 @@ function noSearchWasFoundFallSafe(whereToAppendElement) {
     whereToAppendElement.append(warnningContainerElement)
 }
 
-
 makeLandingPageMovies()
 makeInTheaterNowMovies()
 filterLandingPageMoviesBasedOnYear()
 mainSearchFunction();
 LoadMoreContentAfterScrolling()
+
+/* 
+    ~~
+*/
