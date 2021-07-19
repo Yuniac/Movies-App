@@ -38,7 +38,7 @@ sideBarToggler.addEventListener("click", () => {
     overlayDiv.classList.add(overlayDivTogglingCssClass)
 })
 
-// the sort by drop-down menus: using native 'select' and 'datalist' HTML elements was problematic because each browser renders them differently and there is no way to style them all consistently. So, I'm going to use custom HTML/CSS/JS to get the same result;
+// the sort by drop-down menus: using native 'select' and 'datalist' HTML elements was problematic because each browser renders them differently and there is no way to style them all consistently. So, I'm going to make my own drop down menus;
 function showSortMenus(el, elTarget, css) {
     let htmlTogglerEl = document.getElementById(el);
     let htmlTargetToToggle = document.getElementById(elTarget);
@@ -58,7 +58,7 @@ showSortMenus("ratings-placeholder", "ratings-menu", dropDownMenuTogglingCss);
 showSortMenus("ratings-menu-toggler-icon", "ratings-menu", dropDownMenuTogglingCss);
 
 
-// any click on the overlay div means that it has been invoked by a popup somewhere on the page, so it will remove all enabling classes from all our elements that uses this feature;
+// any click on the overlay div means that it has been invoked by a popup somewhere on the page and now its visible. a click on it while its visible will remove all enabling classes from all our popups which will hide everything. basically, a toggler;
 const sortMenu = document.getElementById("sort-by-menu");
 const ratingsMenu = document.getElementById("ratings-menu");
 

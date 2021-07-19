@@ -1,37 +1,31 @@
 /*
     IT'S ALL ABOUT FETCHING DATA AND WORKING WITH THE DOM HERE
 */
-// those two imports are required to make async functions work with parcel;
-// import "core-js/stable";
-// import "regenerator-runtime/runtime";
-
 import { togglePopups } from "./helpers"
 
-const log = console.log;
-// the api link structure
+// the api key;
 const apiKey = "?api_key=abb107c96224ec174a429b41fa17acda";
 
 const nowPlayingApiUrl = "https://api.themoviedb.org/3/movie/now_playing"
+const trailersApiUrl = "https://api.themoviedb.org/3/movie/";
 const discoverMovieApiUrl = " https://api.themoviedb.org/3/discover/movie"
 const linkToPerson = "https://www.themoviedb.org/person/";
 const linkToAMovieUsingItsID = "https://www.themoviedb.org/movie/";
-
 
 // const tvSearchApiUrl = "https://api.tvmaze.com/search/shows?q=";
 const tvSearchApiUrl = "https://api.themoviedb.org/3/search/tv"
 const moviesSearchApiUrl = "https://api.themoviedb.org/3/search/movie";
 const celebsSearchApiUrl = "https://api.themoviedb.org/3/search/person";
 
-
 const nowPlayingContainerElement = document.querySelector("#now-playing-container");
 const landingPageContainerElement = document.querySelector("#landing-page-container");
 const loadThisMovieContainerElement = document.querySelector("#current-media-container");
 
-
 /* 
     helpers functions related to doing small tasks;
 */
-// this function will will make and return a backdrop or a poster image link for a given movie/tv show based on its id;
+
+// this function will will make and return a backdrop or a poster image link for a given movie/tv show based on its arguments;
 const baseImgUrl = "https://image.tmdb.org/t/p/";
 
 function makeMediaImg(mediaKind, imgSize, imgPath, data) {
@@ -111,7 +105,7 @@ function makeCelebBio(data) {
     let celebDescription = document.createElement("div");
     celebDescription.classList.add("generic-celeb-container__info");
     while (flag < 3) {
-        // while flag < 3 means we are making name, career, etc., a celeb details, once we leave this loop we are going to return something different;
+        // while flag < 3 means we are making name, career, etc., a celeb details. once we leave this loop we are going to return the movies he is famous for;
         let celebInfo = document.createElement("p");
         let identifierSpan = document.createElement("span");
         identifierSpan.classList.add("generic-celeb-container__identifier")
@@ -157,12 +151,12 @@ function makeCelebKnownForMovies(data) {
     celebIsKnownForElement.append(identifierParagraph);
     let moviesArray = data.known_for.splice(0, 3);
     moviesArray.forEach(workTheyDone => {
-        makeHTMLContainers(celebIsKnownForElement, true, "mini-media", workTheyDone)
+        makeHTMLContainers(celebIsKnownForElement, true, "mini-media", workTheyDone, null)
     })
     return celebIsKnownForElement
 }
 
-// get two or more random movies for the 'now in theatres' section;
+// get two 'now in theatres' section;
 function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -174,20 +168,37 @@ function shuffleArray(array) {
 function makeInTheaterNowMovies() {
     let nowPlayingMoviesApiUrl = nowPlayingApiUrl + apiKey;
     fetch(nowPlayingMoviesApiUrl)
-        .then(res => res.json())
+        .then(response => response.json())
         .then(moviesArray => {
             moviesArray = shuffleArray(moviesArray.results)
-            for (let i = 0; i < 2; i++) makeHTMLContainers(nowPlayingContainerElement, false, "media", moviesArray[i])
+            for (let i = 0; i < 2; i++) makeHTMLContainers(nowPlayingContainerElement, false, "media", moviesArray[i], null)
         })
         .catch((e) => console.log(e));
 };
+
+function makeTrailers(elementToAppendClickOn, data) {
+    elementToAppendClickOn.addEventListener("click", function() {
+        const loadThisMovieContainerElement = document.querySelector("#current-movie")
+        loadThisMovieContainerElement.innerHTML = "";
+        loadThisMovieContainerElement.classList.add("current-movie--visible");
+        let urlToFetchTrailers = trailersApiUrl + data.id + "/videos" + apiKey
+        fetch(urlToFetchTrailers)
+            .then(response => response.json())
+            .then(trailersData => {
+                makeHTMLContainers(loadThisMovieContainerElement, false, "movie-preview", data, trailersData);
+                const overlayDiv = document.querySelector("#overlay-div");
+                overlayDiv.classList.add("overlay-div__overlay--modifier");
+            })
+        return loadThisMovieContainerElement
+    })
+}
 
 /* 
     functions which will fetch data/update the page content;
 */
 
 // this function will create and append a fitting div for each movie based on its arguments;
-function makeHTMLContainers(whereToAppendElement, poster = true, mediaKind, data) {
+function makeHTMLContainers(whereToAppendElement, poster = true, mediaKind, data, ifTrailers) {
     if (mediaKind === "media") {
         let containerElement = document.createElement("div");
         let adjcentContainer = document.createElement("div");
@@ -252,34 +263,45 @@ function makeHTMLContainers(whereToAppendElement, poster = true, mediaKind, data
             adjcentContainer.append(mediaNameElement)
         }
         // show and hide the overview element;
-        containerElement.addEventListener("click", () => {
-            const loadThisMovieContainerElement = document.querySelector("#current-movie")
-            loadThisMovieContainerElement.innerHTML = "";
-            loadThisMovieContainerElement.classList.add("current-movie--visible");
-            makeHTMLContainers(loadThisMovieContainerElement, false, "movie-preview", data);
-            const overlayDiv = document.querySelector("#overlay-div");
-            overlayDiv.classList.add("overlay-div__overlay--modifier");
-        })
+        makeTrailers(containerElement, data);
         whereToAppendElement.append(containerElement);
     } else if (mediaKind === "movie-preview") {
         let bannerElement = document.createElement("div");
         bannerElement.classList.add("current-movie__banner")
-        if (data.backdrop_path !== null && data.backdrop_path !== undefined) {
-
-            let backgroundImageLink = makeMediaImg("media", "w1280", data.backdrop_path, data);
-            let backgroundImageLinkInCssFormat = "url('" + backgroundImageLink + "')";
-            bannerElement.style.backgroundImage = backgroundImageLinkInCssFormat;
+            // let trailerIsAvailable = Object.values(ifTrailers.results).every(array => !array.length);
+        let trailers = ifTrailers.results
+        let trailerIsAvailable;
+        for (let property in trailers) {
+            trailers[property] === undefined ? trailerIsAvailable = false : trailerIsAvailable = true;
+        }
+        if (trailerIsAvailable) {
+            let trailerId = trailers.find(object => {
+                return object.name === "Official Trailer" || object.id !== null
+            })
+            trailerId = trailerId.key;
+            let iframeSrcLink = "https://www.youtube.com/embed/" + trailerId;
+            let iframeElement = document.createElement("iframe");
+            iframeElement.classList.add("iframe-css")
+            iframeElement.src = iframeSrcLink;
+            iframeElement.frameBorder = 0;
+            iframeElement.allowFullscreen = true;
+            bannerElement.append(iframeElement);
         } else {
             let bannerImageFallSafeElement = document.createElement("h4");
             bannerImageFallSafeElement.textContent = data.title;
+            bannerElement.append(bannerImageFallSafeElement);
         }
-
 
         let descriptionContainer = document.createElement("div");
         descriptionContainer.classList.add("current-movie__description");
 
         let descriptionParagraph = document.createElement("p");
-        descriptionParagraph.textContent = data.overview;
+        if (data.overview.length) {
+            descriptionParagraph.textContent = "-" + data.overview;
+        } else {
+            descriptionParagraph.textContent = "We Don't Know Much About This One."
+        }
+
         descriptionContainer.append(descriptionParagraph);
 
         let detailsElementContiner = document.createElement("div");
@@ -289,10 +311,13 @@ function makeHTMLContainers(whereToAppendElement, poster = true, mediaKind, data
         linkElement.href = linkToAMovieUsingItsID + data.id;
         detailsElementContiner.append(linkElement);
 
+
         whereToAppendElement.append(bannerElement);
         whereToAppendElement.append(descriptionContainer);
         whereToAppendElement.append(detailsElementContiner);
-        // containerElement.addEventListener("click", loadThisMovie(data, "movie-preview"))
+        console.clear();
+        console.log("%cCan't do anything about those errors they are server-side :)", "color:#4be2ff")
+            // containerElement.addEventListener("click", loadThisMovie(data, "movie-preview"))
     } else if (mediaKind === "celebs") {
         let containerElement = document.createElement("div");
         containerElement.classList.add("generic-celeb-container");
@@ -356,7 +381,7 @@ function updateMoviesFilters(el, elTargetToUpdate) {
     const valuesList = document.querySelectorAll(el);
     const spanToShowCurrentValue = document.querySelector(elTargetToUpdate);
 
-    // handle updating the values visually and getting new movies accordingly;
+    // handle updating the values visually and getting request a new featch to update the movies accordingly;
     valuesList.forEach(li => {
         li.addEventListener("click", () => {
             spanToShowCurrentValue.textContent = li.textContent;
@@ -419,26 +444,27 @@ const sortingByDropDowns = document.querySelectorAll(".properties-drop-down");
 
 function filterLandingPageMoviesBasedOnYear() {
     textInputElement.addEventListener("keyup", function(e) {
-        if (e.key === "Enter") {
-            let year = Number(this.value)
-            if (year < 1900 || year > 2030) {
-                noSearchWasFoundFallSafe(landingPageContainerElement);
+            if (e.key === "Enter") {
+                let year = Number(this.value)
+                if (year < 1900 || year > 2030) {
+                    noSearchWasFoundFallSafe(landingPageContainerElement);
+                }
+                if (year === "" || year.length < 4) {
+                    this.classList.add("warn-invalid-query");
+                    setTimeout(() => {
+                        this.classList.remove("warn-invalid-query")
+                    }, 1500);
+                } else {
+                    clearYearFiltersButton.classList.add("clear-year-filter-button__visible")
+                    this.dataset.parameter = year
+                    year = "";
+                    landingPageContainerElement.innerHTML = "";
+                    sortingByDropDowns.forEach(dropDownMenu => dropDownMenu.classList.add("properties-drop-down--temporarily-disabled"))
+                    makeLandingPageMoviesBasadOnParameters(1)
+                }
             }
-            if (year === "" || year.length < 4) {
-                this.classList.add("warn-invalid-query");
-                setTimeout(() => {
-                    this.classList.remove("warn-invalid-query")
-                }, 1500);
-            } else {
-                clearYearFiltersButton.classList.add("clear-year-filter-button__visible")
-                this.dataset.parameter = year
-                year = "";
-                landingPageContainerElement.innerHTML = "";
-                sortingByDropDowns.forEach(dropDownMenu => dropDownMenu.classList.add("properties-drop-down--temporarily-disabled"))
-                makeLandingPageMoviesBasadOnParameters(1)
-            }
-        }
-    })
+        })
+        // done searching by year? reset everything;
     clearYearFiltersButton.addEventListener("click", () => {
         landingPageContainerElement.innerHTML = "";
         textInputElement.value = "";
@@ -493,8 +519,7 @@ function mainSearchFunction() {
                     .then(searchResultInJson => {
                         validateSearchResult(searchResultInJson.results, tvSearchResultsElement);
                         searchResultInJson.results.forEach(tvShow => {
-                            debugger
-                            makeHTMLContainers(whereToAppendElement, true, "media", tvShow);
+                            makeHTMLContainers(whereToAppendElement, true, "media", tvShow, null);
                         })
                     }).catch(e => console.log(e))
             } else if (mediaKind === "movie") {
@@ -506,7 +531,7 @@ function mainSearchFunction() {
                             validateSearchResult(searchResultInJson.results, moveisSearchResultElement);
                             if (searchResultInJson.results) {
                                 searchResultInJson.results.forEach(movie => {
-                                    makeHTMLContainers(whereToAppendElement, true, "media", movie);
+                                    makeHTMLContainers(whereToAppendElement, true, "media", movie, null);
                                 })
                             }
                         }).catch(e => console.log(e))
@@ -520,7 +545,7 @@ function mainSearchFunction() {
                         // sort the results in term of popularity, it's more likely that whoever the user is searching for is a known actor so this would show them on top right away;
                         searchResultInJson.results = searchResultInJson.results.sort((a, b) => b.popularity - a.popularity)
                         searchResultInJson.results.forEach(person => {
-                            makeHTMLContainers(whereToAppendElement, true, mediaKind, person)
+                            makeHTMLContainers(whereToAppendElement, true, mediaKind, person, null)
                         })
                     }).catch(e => console.log(e))
             }

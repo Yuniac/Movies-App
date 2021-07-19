@@ -4,7 +4,7 @@ header {
     margin: 2rem auto 4.5rem;
     width: 92%;
     @media (max-width: $break-point-m) {
-        width: 100%;
+        width: 95%;
     }
     display: flex;
     justify-content: space-between;
@@ -32,6 +32,9 @@ header {
 .header-container {
     display: flex;
     justify-content: space-evenly;
+    @media (max-width: $break-point-m) {
+        justify-content: space-around;
+    }
     align-items: center;
     width: 20rem;
 }
