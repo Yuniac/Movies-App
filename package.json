@@ -9,6 +9,8 @@
     "private": false,
     "devDependencies": {
         "@babel/plugin-transform-runtime": "^7.14.5",
+        "cssnano": "^5.0.6",
+        "postcss": "^8.2.15",
         "sass": "^1.35.1"
     },
     "dependencies": {
