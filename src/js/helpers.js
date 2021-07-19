@@ -27,9 +27,11 @@ function toggleNotificationsBox(el, elBox, css) {
 const sideBarToggler = document.querySelector("#toggle-side-bar");
 const sideBarEl = document.querySelector(".side-bar");
 const overlayDiv = document.querySelector("#overlay-div");
+const loadThisMovieContainerElement = document.querySelector("#current-movie")
 
 const overlayDivTogglingCssClass = "overlay-div__overlay--modifier";
 const sideBarTogglingCssClass = "side-bar-visible";
+const loadThisMovieContainerElementTogglingCss = "current-movie--visible"
 
 sideBarToggler.addEventListener("click", () => {
     sideBarEl.classList.add(sideBarTogglingCssClass)
@@ -65,6 +67,7 @@ export function togglePopups() {
     ratingsMenu.classList.remove(dropDownMenuTogglingCss);
     sortMenu.classList.remove(dropDownMenuTogglingCss);
     overlayDiv.classList.remove(overlayDivTogglingCssClass);
+    loadThisMovieContainerElement.classList.remove(loadThisMovieContainerElementTogglingCss)
 
 }
 togglePopups();

@@ -24,6 +24,7 @@
 }
 
 main {
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -78,8 +79,9 @@ main {
         background-size: cover;
         background-position: center;
         border-radius: $border-radius-1;
-        &:hover .call-to-action-container {
-            opacity: 1;
+        &:hover {
+            cursor: pointer;
+            filter: blur(3px);
         }
         &__description-css {
             position: absolute;
@@ -501,17 +503,66 @@ main {
     }
 }
 
-.watchlist-container {
-    &__heading {
-        margin-bottom: 8rem;
-        color: $main-golden-color;
+.current-movie {
+    width: 50%;
+    max-width: 1100px;
+    height: 80%;
+    max-height: 950px;
+    @media (min-width: $break-point-xlg) {
+        max-width: 1300px;
+    }
+    margin: 0 auto;
+    background-color: $light-black-background-color;
+    position: fixed;
+    // top: 200px;
+    bottom: 1.6%;
+    opacity: 0;
+    pointer-events: none;
+    &--visible {
+        z-index: $z-important;
+        opacity: 1;
+        pointer-events: visible;
+    }
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    &__banner {
+        width: 100%;
+        height: 30rem;
+        @media (min-width: $break-point-xlg) {
+            height: 40rem;
+        }
         text-align: center;
-        font-size: $font-size-l;
+        background-color: $main-black-background-color;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        text-align: center;
+        word-wrap: normal;
+        color: $main-grey-color;
+    }
+    &__description {
+        color: $main-golden-color;
+        font-size: $font-size-m;
+        line-height: 2.5rem;
+        overflow-y: auto;
+        border-bottom: 1px solid $main-golden-color;
+        margin: 1rem 0;
+        p {
+            padding: 0 0.7rem;
+            &::before {
+                content: "-";
+                text-transform: capitalize;
+            }
+        }
+    }
+    &__details {
+        margin: 2rem 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: royalblue;
+        font-size: 2rem;
+        text-decoration: underline;
     }
 }
-
-// .movies-container {
-//     .movies-search-results {
-//         background-color: cyan;
-//     }
-// }
