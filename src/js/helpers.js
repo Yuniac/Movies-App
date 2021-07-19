@@ -68,6 +68,7 @@ export function togglePopups() {
     sortMenu.classList.remove(dropDownMenuTogglingCss);
     overlayDiv.classList.remove(overlayDivTogglingCssClass);
     loadThisMovieContainerElement.classList.remove(loadThisMovieContainerElementTogglingCss)
+    loadThisMovieContainerElement.innerHTML = ""
 
 }
 togglePopups();
