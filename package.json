@@ -21,6 +21,6 @@
     },
     "scripts": {
         "start": "parcel serve index.html",
-        "build": "parcel build index.html --no-minify"
+        "build": "parcel build index.html"
     }
 }
