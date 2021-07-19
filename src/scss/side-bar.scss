@@ -64,9 +64,13 @@
                     color: $main-golden-color;
                 }
                 &.dormant-icon {
-                    margin-top: 6rem;
-                    &:hover {
+                    margin-top: 14rem;
+                    color: $main-dark-grey-color;
+                    &:hover span,
+                    .side-bar__menu ul li:hover {
                         position: static;
+                        color: inherit;
+                        cursor: default;
                     }
                 }
                 i {

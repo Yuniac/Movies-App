@@ -4,26 +4,14 @@
 // those two imports are required to make async functions work with parcel;
 // import "core-js/stable";
 // import "regenerator-runtime/runtime";
+
 import { togglePopups } from "./helpers"
 
 const log = console.log;
 // the api link structure
 const apiKey = "?api_key=abb107c96224ec174a429b41fa17acda";
-// let arrayToStoreAllMoviesBeingViewedInJson = [];
-//  tv shows =  0
-// browse/search based on year index =  1
-// movies = 2
-let arrayToStoreAllMoviesBeingViewedInJson = [
-    [],
-    [],
-    [],
-];
-
-let arrayToStoreUserWatchList = [
-    [],
-    [],
-    []
-]
+let arrayToStoreAllMoviesBeingViewedInJson = [];
+let arrayToStoreUserWatchList = [];
 
 const nowPlayingApiUrl = "https://api.themoviedb.org/3/movie/now_playing"
 const discoverMovieApiUrl = " https://api.themoviedb.org/3/discover/movie"
@@ -212,99 +200,6 @@ function makeInTheaterNowMovies() {
         .catch((e) => console.log(e));
 };
 
-function makeCallToActionHTML(data, index) {
-    let callToActionContainerElement = document.createElement("div");
-    callToActionContainerElement.classList.add("call-to-action-container");
-
-    let addToWatchListElement = document.createElement("i");
-    addToWatchListElement.dataset.id = data.id
-    let indexOfAnExistingMovie = arrayToStoreUserWatchList[index].map(item => item.id).indexOf(data.id);
-    // if the index is positive it means the movie exist in our database, so toggle the css that the page loads with by default, if it deosn't exist it means we just removed it before we got here;
-    if (indexOfAnExistingMovie >= 0) {
-        addToWatchListElement.classList.add("call-to-action-container__watch-later--checked", "fas", "fa-plus");
-    } else {
-        addToWatchListElement.classList.add("call-to-action-container__watch-later", "fas", "fa-plus");
-    }
-    addToWatchListElement.addEventListener("click", callToActionInteractivity(addToWatchListElement, index));
-    let addToMyRatingsElement = document.createElement("i");
-    addToMyRatingsElement.classList.add("call-to-action-container__my-rating", "fas", "fa-star");
-    addToMyRatingsElement.dataset.id = data.id
-
-
-    callToActionContainerElement.append(addToWatchListElement);
-    callToActionContainerElement.append(addToMyRatingsElement);
-    return callToActionContainerElement
-}
-
-function callToActionInteractivity(el, index) {
-    el.addEventListener("click", () => {
-        debugger
-        log(arrayToStoreUserWatchList)
-        arrayToStoreAllMoviesBeingViewedInJson[index].forEach(movie => {
-            if (index === 0) {
-                if (movie.show.id === Number(el.dataset.id) && arrayToStoreUserWatchList[index].indexOf(movie) === -1) {
-                    arrayToStoreUserWatchList[index].push(movie);
-                    el.classList.add("call-to-action-container__watch-later--checked")
-                    updateUserLists(watchListContainerElement, arrayToStoreUserWatchList[index]);
-                } else if (arrayToStoreUserWatchList[index].indexOf(movie) !== -1 && movie.id === Number(el.dataset.id)) {
-                    arrayToStoreUserWatchList[index].splice(arrayToStoreUserWatchList[index].indexOf(movie), 1)
-                    updateUserLists(watchListContainerElement, arrayToStoreUserWatchList[index]);
-                }
-            }
-            if (movie.id === Number(el.dataset.id) && arrayToStoreUserWatchList[index].indexOf(movie) === -1) {
-                arrayToStoreUserWatchList[index].push(movie);
-                el.classList.add("call-to-action-container__watch-later--checked")
-                updateUserLists(watchListContainerElement, arrayToStoreUserWatchList[index]);
-                updateCurrentlyVisibleMovies(index);
-            } else if (arrayToStoreUserWatchList[index].indexOf(movie) !== -1 && movie.id === Number(el.dataset.id)) {
-                arrayToStoreUserWatchList[index].splice(arrayToStoreUserWatchList[index].indexOf(movie), 1)
-                updateUserLists(watchListContainerElement, arrayToStoreUserWatchList[index]);
-                updateCurrentlyVisibleMovies(index);
-            }
-
-        })
-    })
-}
-
-function updateUserLists(whereToAppendElement, array) {
-    whereToAppendElement.innerHTML = "";
-    log(arrayToStoreAllMoviesBeingViewedInJson)
-    array.forEach(movie => makeHTMLContainers(whereToAppendElement, true, "movie", movie));
-}
-
-function updateCurrentlyVisibleMovies(index) {
-    landingPageContainerElement.innerHTML = "";
-    // if this button is visible then the user is searching for movies based on a year, which requries different behavior if he wants to add to his watchlist/fav;
-    if (clearYearFiltersButton.classList.contains("clear-year-filter-button__visible")) {
-        getAndPassOnFetchingParameters(1)
-    } else {
-        arrayToStoreAllMoviesBeingViewedInJson[index].forEach(movie => {
-            makeHTMLContainers(landingPageContainerElement, true, "movie", movie);
-        })
-    }
-
-}
-
-// function scrollTo(el) {
-//     el.addEventListener("scroll", (e) => {
-//         let scrollingTo = e.offsetHeight;
-//         log(scrollingTo);
-//     })
-// };
-
-//add the result we just got our 'data-base' and then build movies and display them on the page from it;
-function updateTheStoredMoviesArray(index, array) {
-    debugger
-    arrayToStoreAllMoviesBeingViewedInJson[index].push([...array]);
-    let currentArray = arrayToStoreAllMoviesBeingViewedInJson[index];
-    const allIdsOfAllMovies = currentArray.map(movie => {
-        if (index === 0) return movie.show.id;
-        return movie.id;
-    })
-    currentArray = currentArray.filter(({ id }, i) => !allIdsOfAllMovies.includes(id, i + 1))
-    log(currentArray)
-    return currentArray
-};
 /* 
     functions which will fetch data/update the page content;
 */
@@ -376,8 +271,6 @@ function makeHTMLContainers(whereToAppendElement, poster = true, mediaKind, data
 
             adjcentContainer.append(mediaNameElement)
         }
-        let actionsContainerElement = makeCallToActionHTML(data, 1);
-        containerElement.append(actionsContainerElement);
         whereToAppendElement.append(containerElement);
     } else if (mediaKind === "tvshow") {
         let containerElement = document.createElement("div");
@@ -423,9 +316,7 @@ function makeHTMLContainers(whereToAppendElement, poster = true, mediaKind, data
         mediaDetailsElement.append(releaseDateElement);
         // genres
         mediaDetailsElement.append(makeGenres("tvshow", data))
-        let actionsContainerElement = makeCallToActionHTML(data, 0);
 
-        containerElement.append(actionsContainerElement);
         adjcentContainer.append(mediaDetailsElement);
         adjcentContainer.append(mediaNameElementContainer)
         adjcentContainer.append(mediaNameElementContainer)
@@ -501,7 +392,7 @@ function updateMoviesFilters(el, elTargetToUpdate) {
             spanToShowCurrentValue.textContent = li.textContent;
             spanToShowCurrentValue.dataset.parameter = li.dataset.value
             landingPageContainerElement.innerHTML = "";
-            getAndPassOnFetchingParameters(1)
+            makeLandingPageMoviesBasadOnParameters(1)
             togglePopups();
         })
     });
@@ -515,7 +406,7 @@ let pageNumber = 2;
 function LoadMoreContentAfterScrolling() {
     const mainHTMLElement = document.querySelector("main");
     const whereToLodMoreMoviesIntoElement = document.querySelector("#browse-container")
-    const loadMoreThreshold = 1100;
+    const loadMoreThreshold = 100;
     // pageNumber is which page should the api response with, now it returns the first page (page number 1) by default but after scrolling, if we don't change the page number we will get the same movies over and over;
     mainHTMLElement.addEventListener("scroll", () => {
         if (mainHTMLElement.scrollTop + loadMoreThreshold > (mainHTMLElement.scrollHeight - mainHTMLElement.offsetHeight) && whereToLodMoreMoviesIntoElement.classList.contains("container--visible")) {
@@ -525,11 +416,11 @@ function LoadMoreContentAfterScrolling() {
     })
 
     function loadMoreMedia(pageNumber) {
-        getAndPassOnFetchingParameters(pageNumber)
+        makeLandingPageMoviesBasadOnParameters(pageNumber)
     }
 }
 // change what movies being shown in the landing page based on the parameters which we take from the dropdown menus;
-function getAndPassOnFetchingParameters(pageNumber) {
+function makeLandingPageMoviesBasadOnParameters(pageNumber) {
     const fetchParameter = document.querySelectorAll("[data-parameter]");
     const [sortBy, rating, year] = fetchParameter
     makeLandingPageMovies(sortBy.dataset.parameter, rating.dataset.parameter, year.dataset.parameter, pageNumber);
@@ -546,8 +437,8 @@ function makeLandingPageMovies(properties = "popularity.desc", rating = "vote_co
     fetch(discoverMoviesFetchUrl)
         .then(res => res.json())
         .then(json => {
-            let moviesToView = updateTheStoredMoviesArray(1, json.results)
-            moviesToView.forEach(movie => {
+            arrayToStoreAllMoviesBeingViewedInJson.push(...json.results);
+            json.results.forEach(movie => {
                 makeHTMLContainers(landingPageContainerElement, true, "movie", movie);
             })
         }).catch((e) => console.trace(e))
@@ -576,7 +467,7 @@ function filterLandingPageMoviesBasedOnYear() {
                 year = "";
                 landingPageContainerElement.innerHTML = "";
                 sortingByDropDowns.forEach(dropDownMenu => dropDownMenu.classList.add("properties-drop-down--temporarily-disabled"))
-                getAndPassOnFetchingParameters(1)
+                makeLandingPageMoviesBasadOnParameters(1)
             }
         }
     })
@@ -632,10 +523,11 @@ function mainSearchFunction() {
                     .then(response => response.json())
                     .then(searchResultInJson => {
                         validateSearchResult(searchResultInJson, tvSearchResultsElement);
-                        let tvshowSearchResults = updateTheStoredMoviesArray(0, searchResultInJson)
-                        tvshowSearchResults.forEach(item => {
-                            makeHTMLContainers(whereToAppendElement, true, mediaKind, item.show);
+                        arrayToStoreAllMoviesBeingViewedInJson.push(...searchResultInJson)
+                        searchResultInJson.forEach(tvShow => {
+                            makeHTMLContainers(whereToAppendElement, true, mediaKind, tvShow.show);
                         })
+                        arrayToStoreAllMoviesBeingViewedInJson.push(...searchResultInJson);
                     }).catch(e => console.log(e))
             } else if (mediaKind === "movie") {
                 if (searchQuery.length) {
@@ -644,12 +536,13 @@ function mainSearchFunction() {
                         .then(response => response.json())
                         .then(searchResultInJson => {
                             validateSearchResult(searchResultInJson.results, moveisSearchResultElement);
-                            let moviesSearchResults = updateTheStoredMoviesArray(3, searchResultInJson.results)
-                            if (moviesSearchResults) {
-                                moviesSearchResults.forEach(movie => {
+                            arrayToStoreAllMoviesBeingViewedInJson.push(...searchResultInJson.results)
+                            if (searchResultInJson.results) {
+                                searchResultInJson.results.forEach(movie => {
                                     makeHTMLContainers(whereToAppendElement, true, mediaKind, movie);
                                 })
                             }
+                            arrayToStoreAllMoviesBeingViewedInJson.push(...searchResultInJson.results);
                         }).catch(e => console.log(e))
                 }
             } else {
