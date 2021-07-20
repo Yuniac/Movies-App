@@ -3,7 +3,7 @@
 .side-bar {
     width: calc(25%);
     min-width: 300px;
-    @media (max-width: $break-point-lg) {
+    @media (max-width: $break-point-xlg) {
         display: none;
     }
     padding: 2rem 0;
@@ -46,7 +46,7 @@
             }
             li {
                 width: 9.5rem;
-                @media (min-width: $break-point-lg) {
+                @media (min-width: $break-point-xlg) {
                     width: 14rem;
                 }
                 padding: 1rem 0;
@@ -58,16 +58,13 @@
                     left: -6px;
                 }
                 span {
-                    @media (min-width: $break-point-lg) {
+                    @media (min-width: $break-point-xlg) {
                         width: 9rem;
                     }
                     &:hover {
                         color: $main-white-color;
                         cursor: pointer;
                     }
-                }
-                &:hover .side-bar-icon {
-                    color: $main-golden-color;
                 }
             }
             i {

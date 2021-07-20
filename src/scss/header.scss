@@ -3,7 +3,7 @@
 header {
     margin: 2rem auto 4.5rem;
     width: 92%;
-    @media (max-width: $break-point-m) {
+    @media (max-width: $break-point-l) {
         width: 95%;
     }
     display: flex;
@@ -16,7 +16,7 @@ header {
         visibility: hidden;
         pointer-events: none;
     }
-    @media (max-width: $break-point-lg) {
+    @media (max-width: $break-point-xlg) {
         .toggle-side-bar {
             font-size: 1.1rem;
             visibility: visible;
@@ -32,7 +32,7 @@ header {
 .header-container {
     display: flex;
     justify-content: space-evenly;
-    @media (max-width: $break-point-m) {
+    @media (max-width: $break-point-s) {
         justify-content: space-around;
     }
     align-items: center;

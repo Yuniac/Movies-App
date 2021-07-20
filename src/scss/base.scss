@@ -38,7 +38,7 @@ body {
     width: 100%;
     font-family: "Rubik", sans-serif;
     font-size: $font-size-s;
-    @media (min-width: $break-point-xlg) {
+    @media (min-width: $break-point-xxlg) {
         font-size: $font-size-m;
     }
     background-color: $main-black-background-color;
