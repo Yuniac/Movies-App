@@ -49,22 +49,8 @@ const allTvshowsGenre = [{ "id": 10759, "name": "Action & Adventure" }, { "id": 
 function makeGenres(mediaKind, data) {
 
     if (mediaKind === "poster") {
-        // if no genres;
-        if (!data.genre_ids.length) {
-            genresElement.textContent = "| Unknown Genre"
-            return genresElement
-        }
+
         return makeRightGenresBasedOnMediaKind(data.genre_ids, allMoviesGenres)
-            // let movieGenresArray = data.genre_ids.slice(0, 2)
-
-        // allMoviesGenres.forEach(oneOfTheAllgenres => {
-        //     movieGenresArray.forEach(incomingGenre => {
-        //         incomingGenre === oneOfTheAllgenres.id ? genresElement.textContent += oneOfTheAllgenres.name + ", " : null
-        //     });
-
-        // });
-        // remove the extra comma and space in case there are extra;
-
     } else if (mediaKind === "tvshow") {
         if (!data.genre_ids.length) {
             genresElement.textContent = "Unknown Genre"
@@ -78,6 +64,11 @@ function makeGenres(mediaKind, data) {
     function makeRightGenresBasedOnMediaKind(array, genresKindArray) {
         let genresElement = document.createElement("span");
         // if it has a known genre, we are going to show only two genres from its list;
+        // if no genres;
+        if (!data.genre_ids.length) {
+            genresElement.textContent = "| Unknown Genre"
+            return genresElement
+        }
         let mediaGenresArray = array.slice(0, 2)
 
         genresKindArray.forEach(oneOfTheAllgenres => {
@@ -238,7 +229,7 @@ function makeHTMLContainers(whereToAppendElement, poster = true, mediaKind, data
                 let backgroundImageFallSafeElement = document.createElement("div");
                 backgroundImageFallSafeElement.classList.add("generic-media-container__background-img-fall-safe")
                 let noBackgroundText = document.createElement("p");
-                noBackgroundText.textContent = "No Poster 404";
+                noBackgroundText.textContent = data.title || data.name;
                 backgroundImageFallSafeElement.append(noBackgroundText);
 
                 containerElement.append(backgroundImageFallSafeElement);
@@ -459,9 +450,16 @@ function makeLandingPageMovies(properties = "popularity.desc", rating = "vote_co
     fetch(discoverMoviesFetchUrl)
         .then(res => res.json())
         .then(json => {
-            console.log(json);
             if (rating === "vote_count.asc") {
                 json.results = json.results.sort((a, b) => a.vote_average - b.vote_average)
+            }
+            if (properties === "release_date.desc") {
+                json.results = json.results.sort((a, b) => b.release_date.slice(0, 4) - a.release_date.slice(0, 4))
+                for (let i = 0; i < json.results.length; i++) {
+                    let index = json.results.findIndex(year => year.release_date.slice(0, 4) <= 2022)
+                    if (index) json.results.splice(index, 1);
+                }
+                console.log(json.results)
             }
             json.results.forEach(movie => {
                 makeHTMLContainers(landingPageContainerElement, true, "poster", movie);
