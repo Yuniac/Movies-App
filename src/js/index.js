@@ -7,7 +7,8 @@ import { togglePopups } from "./helpers"
 const apiKey = "?api_key=abb107c96224ec174a429b41fa17acda";
 
 const nowPlayingApiUrl = "https://api.themoviedb.org/3/movie/now_playing"
-const trailersApiUrl = "https://api.themoviedb.org/3/movie/";
+const moviesTrailerApiUrl = "https://api.themoviedb.org/3/movie/";
+const tvshowsTrailerApiUrl = "https://api.themoviedb.org/3/tv/";
 const discoverMovieApiUrl = " https://api.themoviedb.org/3/discover/movie"
 const linkToPerson = "https://www.themoviedb.org/person/";
 const linkToAMovieUsingItsID = "https://www.themoviedb.org/movie/";
@@ -29,7 +30,7 @@ const loadThisMovieContainerElement = document.querySelector("#current-media-con
 const baseImgUrl = "https://image.tmdb.org/t/p/";
 
 function makeMediaImg(mediaKind, imgSize, imgPath, data) {
-    if (mediaKind === "media" || mediaKind === "mini-media") {
+    if (mediaKind === "poster" || mediaKind === "mini-poster") {
         let backgroundImgURL = baseImgUrl + imgSize + imgPath
         return backgroundImgURL
     }
@@ -42,35 +43,49 @@ function makeMediaImg(mediaKind, imgSize, imgPath, data) {
 // storing the genres locally to save us a fetch call, its highly unlikely the api we are using is going to change how their genres work;
 const allMoviesGenres = [{ "id": 28, "name": "Action" }, { "id": 12, "name": "Adventure" }, { "id": 16, "name": "Animation" }, { "id": 35, "name": "Comedy" }, { "id": 80, "name": "Crime" }, { "id": 99, "name": "Documentary" }, { "id": 18, "name": "Drama" }, { "id": 10751, "name": "Family" }, { "id": 14, "name": "Fantasy" }, { "id": 36, "name": "History" }, { "id": 27, "name": "Horror" }, { "id": 10402, "name": "Music" }, { "id": 9648, "name": "Mystery" }, { "id": 10749, "name": "Romance" }, { "id": 878, "name": "Science Fiction" }, { "id": 10770, "name": "TV Movie" }, { "id": 53, "name": "Thriller" }, { "id": 10752, "name": "War" }, { "id": 37, "name": "Western" }]
 
+const allTvshowsGenre = [{ "id": 10759, "name": "Action & Adventure" }, { "id": 16, "name": "Animation" }, { "id": 35, "name": "Comedy" }, { "id": 80, "name": "Crime" }, { "id": 99, "name": "Documentary" }, { "id": 18, "name": "Drama" }, { "id": 10751, "name": "Family" }, { "id": 10762, "name": "Kids" }, { "id": 9648, "name": "Mystery" }, { "id": 10763, "name": "News" }, { "id": 10764, "name": "Reality" }, { "id": 10765, "name": "Sci-Fi & Fantasy" }, { "id": 10766, "name": "Soap" }, { "id": 10767, "name": "Talk" }, { "id": 10768, "name": "War & Politics" }, { "id": 37, "name": "Western" }]
+
 // this function will make and return the genres and the html needed for the them;
 function makeGenres(mediaKind, data) {
-    let genresElement = document.createElement("span");
-    if (mediaKind === "media") {
+
+    if (mediaKind === "poster") {
         // if no genres;
         if (!data.genre_ids.length) {
             genresElement.textContent = "Unknown Genre"
             return genresElement
         }
-        // if it has a known genre, we are going to show only two genres from its list;
-        let movieGenresArray = data.genre_ids.slice(0, 2)
+        return makeRightGenresBasedOnMediaKind(data.genre_ids, allMoviesGenres)
+            // let movieGenresArray = data.genre_ids.slice(0, 2)
 
-        allMoviesGenres.forEach(oneOfTheAllgenres => {
-            movieGenresArray.forEach(incomingGenre => {
+        // allMoviesGenres.forEach(oneOfTheAllgenres => {
+        //     movieGenresArray.forEach(incomingGenre => {
+        //         incomingGenre === oneOfTheAllgenres.id ? genresElement.textContent += oneOfTheAllgenres.name + ", " : null
+        //     });
+
+        // });
+        // remove the extra comma and space in case there are extra;
+
+    } else if (mediaKind === "tvshow") {
+        if (!data.genre_ids.length) {
+            genresElement.textContent = "Unknown Genre"
+            return genresElement
+        }
+        return makeRightGenresBasedOnMediaKind(data.genre_ids, allTvshowsGenre)
+    } else {
+        genresElement.textContent = "Unknown Genre"
+    }
+
+    function makeRightGenresBasedOnMediaKind(array, genresKindArray) {
+        let genresElement = document.createElement("span");
+        // if it has a known genre, we are going to show only two genres from its list;
+        let mediaGenresArray = array.slice(0, 2)
+
+        genresKindArray.forEach(oneOfTheAllgenres => {
+            mediaGenresArray.forEach(incomingGenre => {
                 incomingGenre === oneOfTheAllgenres.id ? genresElement.textContent += oneOfTheAllgenres.name + ", " : null
             });
 
         });
-        // remove the extra comma and space in case there are extra;
-        genresElement.textContent = genresElement.textContent.slice(0, -2)
-        return genresElement
-    } else {
-        if (!data.genres.length) {
-            genresElement.textContent = "Unknown Genre"
-            return genresElement
-        }
-        data.genres.forEach(genre => {
-            genresElement.textContent += genre + ", "
-        })
         genresElement.textContent = genresElement.textContent.slice(0, -2)
         return genresElement
     }
@@ -83,7 +98,7 @@ function makeRating(mediaKind, data) {
     let ratingElementContainer = document.createElement("p");
     let ratingElement = document.createElement("span");
     ratingElementContainer.classList.add("rating-css");
-    if (mediaKind === "movie") {
+    if (mediaKind === "poster") {
         if (data.vote_average) {
             // we only want to show the first digit in the rating, no floating rating numbers;
             // rating comes as a number;
@@ -100,7 +115,7 @@ function makeRating(mediaKind, data) {
     return ratingElementContainer;
 }
 
-function makeCelebBio(data) {
+function makeCelebBio(data, upperInfo, lowerInfo) {
     let flag = 0;
     let celebDescription = document.createElement("div");
     celebDescription.classList.add("generic-celeb-container__info");
@@ -127,8 +142,11 @@ function makeCelebBio(data) {
         celebDescription.append(celebInfo);
         flag++
     }
+    upperInfo.append(celebDescription);
+
     if (data.known_for !== null) {
-        celebDescription.append(makeCelebKnownForMovies(data))
+        lowerInfo.append(makeCelebKnownForMovies(data))
+        console.log(lowerInfo);
     } else {
         let celebInfo = document.createElement("p");
         let identifierSpan = document.createElement("span");
@@ -136,24 +154,23 @@ function makeCelebBio(data) {
         identifierSpan.textContent = "Known For:";
         celebInfo.append(identifierSpan);
         celebInfo.append("N/A");
+        lowerInfo.append(celebInfo);
+
     }
-
-    return celebDescription
-
 }
 
 function makeCelebKnownForMovies(data) {
-    let celebIsKnownForElement = document.createElement("div");
-    celebIsKnownForElement.classList.add("generic-celeb-container__mini-movies");
+    let celebIsKnownForContainer = document.createElement("div");
+    celebIsKnownForContainer.classList.add("generic-celeb-container__mini-movies");
     let identifierParagraph = document.createElement("p");
     identifierParagraph.classList.add("generic-celeb-container__identifier")
     identifierParagraph.textContent = "Known For: "
-    celebIsKnownForElement.append(identifierParagraph);
+    celebIsKnownForContainer.append(identifierParagraph);
     let moviesArray = data.known_for.splice(0, 3);
     moviesArray.forEach(workTheyDone => {
-        makeHTMLContainers(celebIsKnownForElement, true, "mini-media", workTheyDone, null)
+        makeHTMLContainers(celebIsKnownForContainer, true, "mini-poster", workTheyDone, null)
     })
-    return celebIsKnownForElement
+    return celebIsKnownForContainer
 }
 
 // get two 'now in theatres' section;
@@ -171,17 +188,22 @@ function makeInTheaterNowMovies() {
         .then(response => response.json())
         .then(moviesArray => {
             moviesArray = shuffleArray(moviesArray.results)
-            for (let i = 0; i < 2; i++) makeHTMLContainers(nowPlayingContainerElement, false, "media", moviesArray[i], null)
+            for (let i = 0; i < 2; i++) makeHTMLContainers(nowPlayingContainerElement, false, "poster", moviesArray[i], null)
         })
         .catch((e) => console.log(e));
 };
 
-function makeTrailers(elementToAppendClickOn, data) {
+function makeTrailers(mediaKind, elementToAppendClickOn, data) {
     elementToAppendClickOn.addEventListener("click", function() {
         const loadThisMovieContainerElement = document.querySelector("#current-movie")
         loadThisMovieContainerElement.innerHTML = "";
         loadThisMovieContainerElement.classList.add("current-movie--visible");
-        let urlToFetchTrailers = trailersApiUrl + data.id + "/videos" + apiKey
+        let urlToFetchTrailers;
+        if (mediaKind === "poster") {
+            urlToFetchTrailers = moviesTrailerApiUrl + data.id + "/videos" + apiKey
+        } else if (mediaKind === "tvshow") {
+            urlToFetchTrailers = tvshowsTrailerApiUrl + data.id + "/videos" + apiKey
+        }
         fetch(urlToFetchTrailers)
             .then(response => response.json())
             .then(trailersData => {
@@ -199,7 +221,7 @@ function makeTrailers(elementToAppendClickOn, data) {
 
 // this function will create and append a fitting div for each movie based on its arguments;
 function makeHTMLContainers(whereToAppendElement, poster = true, mediaKind, data, ifTrailers) {
-    if (mediaKind === "media") {
+    if (mediaKind === "poster" || mediaKind === "tvshow") {
         let containerElement = document.createElement("div");
         let adjcentContainer = document.createElement("div");
 
@@ -209,7 +231,7 @@ function makeHTMLContainers(whereToAppendElement, poster = true, mediaKind, data
             containerElement.classList.add("generic-media-container");
             adjcentContainer.classList.add("generic-media-container__description-css");
             if (data.poster_path !== null) {
-                let backgroundImageLink = makeMediaImg(mediaKind, "w780", data.poster_path, null);
+                let backgroundImageLink = makeMediaImg("poster", "w780", data.poster_path, null);
                 let backgroundImageLinkInCssFormat = "url('" + backgroundImageLink + "')";
                 containerElement.style.backgroundImage = backgroundImageLinkInCssFormat;
             } else {
@@ -226,18 +248,23 @@ function makeHTMLContainers(whereToAppendElement, poster = true, mediaKind, data
 
 
             let mediaNameElement = document.createElement("h4");
-            mediaNameElement.textContent = data.title
+            mediaNameElement.textContent = data.title || data.name
             mediaNameElementContainer.append(mediaNameElement);
-            mediaNameElementContainer.append(makeRating("movie", data))
+            mediaNameElementContainer.append(makeRating("poster", data))
 
 
             let mediaDetailsElement = document.createElement("p");
             // release date;
             let releaseDateElement = document.createElement("span");
-            if (data.release_date === undefined) {
-                releaseDateElement.textContent = "Unkown Release Date"
-            } else if (data.release_date.length) {
+            // if (data.release_date === undefined || null && data.first_air_date === undefined || null) {
+            //     releaseDateElement.textContent = "Unkown Release Date"
+            // } else 
+            if (data.release_date !== undefined || null) {
                 releaseDateElement.textContent = data.release_date.slice(0, 4) + " / ";
+            } else if (data.first_air_date !== undefined || null) {
+                releaseDateElement.textContent = data.first_air_date.slice(0, 4) + " / ";
+            } else {
+                releaseDateElement.textContent = "Unkown Release Date "
             }
             mediaDetailsElement.append(releaseDateElement);
             // genres
@@ -262,8 +289,7 @@ function makeHTMLContainers(whereToAppendElement, poster = true, mediaKind, data
 
             adjcentContainer.append(mediaNameElement)
         }
-        // show and hide the overview element;
-        makeTrailers(containerElement, data);
+        makeTrailers(mediaKind, containerElement, data);
         whereToAppendElement.append(containerElement);
     } else if (mediaKind === "movie-preview") {
         let bannerElement = document.createElement("div");
@@ -316,8 +342,7 @@ function makeHTMLContainers(whereToAppendElement, poster = true, mediaKind, data
         whereToAppendElement.append(descriptionContainer);
         whereToAppendElement.append(detailsElementContiner);
         console.clear();
-        console.log("%cCan't do anything about those errors they are server-side :)", "color:#4be2ff")
-            // containerElement.addEventListener("click", loadThisMovie(data, "movie-preview"))
+        // containerElement.addEventListener("click", loadThisMovie(data, "movie-preview"))
     } else if (mediaKind === "celebs") {
         let containerElement = document.createElement("div");
         containerElement.classList.add("generic-celeb-container");
@@ -347,12 +372,14 @@ function makeHTMLContainers(whereToAppendElement, poster = true, mediaKind, data
         }
         let overviewContainerElement = document.createElement("div");
         overviewContainerElement.classList.add("generic-celeb-container__overview");
-        overviewContainerElement.append(makeCelebBio(data));
+        overviewContainerElement.append(makeCelebBio(data, personalContainerElement, overviewContainerElement));
 
         containerElement.append(personalContainerElement);
+        // something was inserting 'undefined' text node into the dom, I couldn't figure out the source so i'm just removing it instead...;
+        overviewContainerElement.lastChild.remove();
         containerElement.append(overviewContainerElement);
         whereToAppendElement.append(containerElement);
-    } else if (mediaKind === "mini-media") {
+    } else if (mediaKind === "mini-poster") {
         if (data.poster_path !== null && data.poster_path !== undefined) {
             let containerElement = document.createElement("div");
             let backgroundImageLink = makeMediaImg(mediaKind, "w342", data.poster_path, data);
@@ -368,9 +395,13 @@ function makeHTMLContainers(whereToAppendElement, poster = true, mediaKind, data
             let backgroundImageFallSafeElement = document.createElement("div");
             backgroundImageFallSafeElement.classList.add("generic-celeb-container__celeb-movies-img-fall-safe")
             let noBackgroundText = document.createElement("p");
-            noBackgroundText.textContent = data.title;
             backgroundImageFallSafeElement.append(noBackgroundText);
-
+            let linkToMovieElement = document.createElement("a");
+            linkToMovieElement.href = linkToAMovieUsingItsID + data.id;
+            linkToMovieElement.textContent = data.title;
+            linkToMovieElement.classList.add("generic-celeb-container__link-to")
+            noBackgroundText.append(linkToMovieElement);
+            backgroundImageFallSafeElement.append(noBackgroundText)
             whereToAppendElement.append(backgroundImageFallSafeElement)
         }
     }
@@ -432,7 +463,7 @@ function makeLandingPageMovies(properties = "popularity.desc", rating = "vote_co
         .then(res => res.json())
         .then(json => {
             json.results.forEach(movie => {
-                makeHTMLContainers(landingPageContainerElement, true, "media", movie);
+                makeHTMLContainers(landingPageContainerElement, true, "poster", movie);
             })
         }).catch((e) => console.trace(e))
 }
@@ -518,8 +549,9 @@ function mainSearchFunction() {
                     .then(response => response.json())
                     .then(searchResultInJson => {
                         validateSearchResult(searchResultInJson.results, tvSearchResultsElement);
+                        debugger
                         searchResultInJson.results.forEach(tvShow => {
-                            makeHTMLContainers(whereToAppendElement, true, "media", tvShow, null);
+                            makeHTMLContainers(whereToAppendElement, true, "tvshow", tvShow, null);
                         })
                     }).catch(e => console.log(e))
             } else if (mediaKind === "movie") {
@@ -531,7 +563,7 @@ function mainSearchFunction() {
                             validateSearchResult(searchResultInJson.results, moveisSearchResultElement);
                             if (searchResultInJson.results) {
                                 searchResultInJson.results.forEach(movie => {
-                                    makeHTMLContainers(whereToAppendElement, true, "media", movie, null);
+                                    makeHTMLContainers(whereToAppendElement, true, "poster", movie, null);
                                 })
                             }
                         }).catch(e => console.log(e))
