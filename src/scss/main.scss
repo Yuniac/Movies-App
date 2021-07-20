@@ -450,8 +450,8 @@ main {
         .drop-down-menu {
             display: none;
             position: absolute;
-            top: 19px;
-            right: -65px;
+            top: 29px;
+            right: -1px;
             @media (max-width: $break-point-l) {
                 right: 6%;
             }
