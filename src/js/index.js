@@ -51,7 +51,7 @@ function makeGenres(mediaKind, data) {
     if (mediaKind === "poster") {
         // if no genres;
         if (!data.genre_ids.length) {
-            genresElement.textContent = "Unknown Genre"
+            genresElement.textContent = "| Unknown Genre"
             return genresElement
         }
         return makeRightGenresBasedOnMediaKind(data.genre_ids, allMoviesGenres)
@@ -256,20 +256,17 @@ function makeHTMLContainers(whereToAppendElement, poster = true, mediaKind, data
             let mediaDetailsElement = document.createElement("p");
             // release date;
             let releaseDateElement = document.createElement("span");
-            // if (data.release_date === undefined || null && data.first_air_date === undefined || null) {
-            //     releaseDateElement.textContent = "Unkown Release Date"
-            // } else 
             if (data.release_date !== undefined || null) {
                 releaseDateElement.textContent = data.release_date.slice(0, 4) + " / ";
             } else if (data.first_air_date !== undefined || null) {
                 releaseDateElement.textContent = data.first_air_date.slice(0, 4) + " / ";
             } else {
-                releaseDateElement.textContent = "Unkown Release Date "
+                releaseDateElement.textContent = "Unkown Release Date | "
             }
             mediaDetailsElement.append(releaseDateElement);
             // genres
             mediaDetailsElement.append(makeGenres(mediaKind, data))
-
+            makeTrailers(mediaKind, containerElement, data);
             adjcentContainer.append(mediaDetailsElement);
             adjcentContainer.append(mediaNameElementContainer)
         } else {
@@ -289,7 +286,7 @@ function makeHTMLContainers(whereToAppendElement, poster = true, mediaKind, data
 
             adjcentContainer.append(mediaNameElement)
         }
-        makeTrailers(mediaKind, containerElement, data);
+
         whereToAppendElement.append(containerElement);
     } else if (mediaKind === "movie-preview") {
         let bannerElement = document.createElement("div");
@@ -462,6 +459,10 @@ function makeLandingPageMovies(properties = "popularity.desc", rating = "vote_co
     fetch(discoverMoviesFetchUrl)
         .then(res => res.json())
         .then(json => {
+            console.log(json);
+            if (rating === "vote_count.asc") {
+                json.results = json.results.sort((a, b) => a.vote_average - b.vote_average)
+            }
             json.results.forEach(movie => {
                 makeHTMLContainers(landingPageContainerElement, true, "poster", movie);
             })
