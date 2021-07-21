@@ -61,7 +61,7 @@ header {
         position: absolute;
         bottom: -93px;
         left: -42px;
-        background-color: $secondary-black-background-color;
+        background-color: $secondary-black-color;
         width: 12rem;
         padding: 0.8rem;
         text-align: center;
@@ -71,7 +71,7 @@ header {
             bottom: 62px;
             left: 86px;
             border: 15px solid transparent;
-            border-bottom-color: $secondary-black-background-color
+            border-bottom-color: $secondary-black-color
         }
     }
     &__messages-box--visible {
@@ -86,7 +86,7 @@ header {
         position: absolute;
         bottom: -70px;
         left: -85px;
-        background-color: $secondary-black-background-color;
+        background-color: $secondary-black-color;
         width: 12rem;
         padding: 0.8rem;
         text-align: center;
@@ -96,7 +96,7 @@ header {
             bottom: 44px;
             left: 80px;
             border: 15px solid transparent;
-            border-bottom-color: $secondary-black-background-color
+            border-bottom-color: $secondary-black-color
         }
     }
     &__alerts-box--visible {

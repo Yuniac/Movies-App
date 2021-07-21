@@ -47,28 +47,22 @@ const allTvshowsGenre = [{ "id": 10759, "name": "Action & Adventure" }, { "id": 
 
 // this function will make and return the genres and the html needed for the them;
 function makeGenres(mediaKind, data) {
-
     if (mediaKind === "poster") {
-
         return makeRightGenresBasedOnMediaKind(data.genre_ids, allMoviesGenres)
     } else if (mediaKind === "tvshow") {
-        if (!data.genre_ids.length) {
-            genresElement.textContent = "Unknown Genre"
-            return genresElement
-        }
         return makeRightGenresBasedOnMediaKind(data.genre_ids, allTvshowsGenre)
     } else {
-        genresElement.textContent = "Unknown Genre"
+        genresElement.textContent = "| Unknown Genre"
     }
 
     function makeRightGenresBasedOnMediaKind(array, genresKindArray) {
         let genresElement = document.createElement("span");
-        // if it has a known genre, we are going to show only two genres from its list;
         // if no genres;
-        if (!data.genre_ids.length) {
+        if (!data.genre_ids.length || data.genre_ids === null) {
             genresElement.textContent = "| Unknown Genre"
             return genresElement
         }
+        // if it has a known genre, we are going to show only two genres from its list;
         let mediaGenresArray = array.slice(0, 2)
 
         genresKindArray.forEach(oneOfTheAllgenres => {
@@ -77,6 +71,7 @@ function makeGenres(mediaKind, data) {
             });
 
         });
+        // remove extra space, comma. in case there are any;
         genresElement.textContent = genresElement.textContent.slice(0, -2)
         return genresElement
     }
@@ -137,7 +132,6 @@ function makeCelebBio(data, upperInfo, lowerInfo) {
 
     if (data.known_for !== null) {
         lowerInfo.append(makeCelebKnownForMovies(data))
-        console.log(lowerInfo);
     } else {
         let celebInfo = document.createElement("p");
         let identifierSpan = document.createElement("span");
@@ -281,8 +275,7 @@ function makeHTMLContainers(whereToAppendElement, poster = true, mediaKind, data
         whereToAppendElement.append(containerElement);
     } else if (mediaKind === "movie-preview") {
         let bannerElement = document.createElement("div");
-        bannerElement.classList.add("current-movie__banner")
-            // let trailerIsAvailable = Object.values(ifTrailers.results).every(array => !array.length);
+        bannerElement.classList.add("current-movie__trailer")
         let trailers = ifTrailers.results
         let trailerIsAvailable;
         for (let property in trailers) {
@@ -301,8 +294,11 @@ function makeHTMLContainers(whereToAppendElement, poster = true, mediaKind, data
             iframeElement.allowFullscreen = true;
             bannerElement.append(iframeElement);
         } else {
-            let bannerImageFallSafeElement = document.createElement("h4");
-            bannerImageFallSafeElement.textContent = data.title;
+            // let bannerImageFallSafeElement = document.createElement("h4");
+            // bannerImageFallSafeElement.textContent = data.title;
+            // bannerElement.append(bannerImageFallSafeElement);
+            let bannerImageFallSafeElement = document.createElement("i");
+            bannerImageFallSafeElement.classList.add("fas", "fa-video-slash")
             bannerElement.append(bannerImageFallSafeElement);
         }
 
@@ -353,14 +349,14 @@ function makeHTMLContainers(whereToAppendElement, poster = true, mediaKind, data
             let backgroundImageFallSafeElement = document.createElement("div");
             backgroundImageFallSafeElement.classList.add("generic-celeb-container__celeb-background-img-fall-safe")
             let noBackgroundText = document.createElement("p");
-            noBackgroundText.textContent = `No Image was found for ${data.name}`;
+            noBackgroundText.textContent = `${data.name}`;
             backgroundImageFallSafeElement.append(noBackgroundText);
 
             personalContainerElement.append(backgroundImageFallSafeElement);
         }
         let overviewContainerElement = document.createElement("div");
         overviewContainerElement.classList.add("generic-celeb-container__overview");
-        overviewContainerElement.append(makeCelebBio(data, personalContainerElement, overviewContainerElement));
+        overviewContainerElement.append(makeCelebBio(data, overviewContainerElement, overviewContainerElement));
 
         containerElement.append(personalContainerElement);
         // something was inserting 'undefined' text node into the dom, I couldn't figure out the source so i'm just removing it instead...;
@@ -478,8 +474,10 @@ function filterLandingPageMoviesBasedOnYear() {
                 let year = Number(this.value)
                 if (year < 1900 || year > 2030) {
                     noSearchWasFoundFallSafe(landingPageContainerElement);
+                    clearYearFiltersButton.classList.add("clear-year-filter-button__visible")
                 }
-                if (year === "" || year.length < 4) {
+                debugger
+                if (year.toString() === "" || year.toString().length < 4 || year.toString().length >= 5) {
                     this.classList.add("warn-invalid-query");
                     setTimeout(() => {
                         this.classList.remove("warn-invalid-query")
@@ -609,6 +607,10 @@ function noSearchWasFoundFallSafe(whereToAppendElement) {
 
     whereToAppendElement.append(warnningContainerElement)
 }
+
+window.addEventListener("load", () => {
+    textInputElement.value = "";
+})
 
 makeLandingPageMovies()
 makeInTheaterNowMovies()

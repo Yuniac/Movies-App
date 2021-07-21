@@ -59,7 +59,7 @@ main {
         }
         .rating-css {
             background-color: $main-golden-color;
-            color: $main-black-background-color;
+            color: $main-black-color;
             font-size: $font-size-s;
             width: 2.5rem;
             height: 2.5rem;
@@ -77,7 +77,7 @@ main {
         //     min-width: 260px;
         // }
         height: 350px;
-        background: $main-black-background-color;
+        background: $main-black-color;
         margin: 0 1.5rem 8rem;
         background-repeat: no-repeat;
         background-size: cover;
@@ -119,13 +119,14 @@ main {
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: $light-black-background-color;
+            background-color: $light-black-color;
             border-radius: $border-radius-1;
             display: flex;
             justify-content: center;
             align-items: center;
             font-family: Arial, Helvetica, sans-serif;
             font-size: $font-size-m;
+            text-align: center;
         }
     }
 }
@@ -150,14 +151,18 @@ main {
     .generic-celeb-container {
         position: relative;
         display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-        align-items: flex-start;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
         width: 100%;
-        width: 100%;
-        background-color: $light-black-background-color;
-        height: 39rem;
-        @media (max-width: $break-point-m) {
+        @media (min-width: $break-point-xxlg) {
+            width: 85%;
+            margin: 2rem auto;
+        }
+        background-color: $light-black-color;
+        height: 30rem;
+        @media (max-width: $break-point-xlg) {
+            flex-direction: column;
             height: max-content;
         }
         margin: 2rem 0;
@@ -169,9 +174,9 @@ main {
                 align-items: center;
             }
             justify-content: flex-start;
-            width: clamp(100px, 65%, 60%);
+            width: clamp(100px, 30%, 60%);
             @media (min-width: $break-point-xxlg) {
-                width: 80%;
+                width: 25%;
             }
             @media (max-width: $break-point-l) {
                 width: 100%;
@@ -184,13 +189,13 @@ main {
             background-repeat: no-repeat;
             background-position: center;
             background-size: cover;
-            width: clamp(250px, 38%, 42%);
-            height: 100%;
+            width: 100%;
+            height: 30rem;
             @media (min-width: $break-point-xxlg) {
-                height: 155%
+                width: 100%
             }
             @media (max-width: $break-point-m) {
-                height: 20rem;
+                height: 30rem;
                 margin-bottom: 1rem;
             }
         }
@@ -203,7 +208,7 @@ main {
             }
         }
         &__overview {
-            width: 765px;
+            width: 74.3%;
             align-self: flex-end;
             @media (max-width: $break-point-xlg) {
                 width: 100%
@@ -211,6 +216,7 @@ main {
             p {
                 font-weight: 500;
                 font-size: 2rem;
+                padding: 0.5rem 1rem 2rem;
             }
         }
         &__identifier {
@@ -225,6 +231,7 @@ main {
         }
         &__mini-movies {
             display: flex;
+            justify-content: space-between;
             @media (max-width: $break-point-m) {
                 display: grid;
                 justify-items: center;
@@ -233,7 +240,6 @@ main {
                 overflow-y: auto;
                 grid-row-gap: 1rem;
             }
-            justify-content: space-evenly;
             div {
                 height: 15rem;
                 width: 10rem;
@@ -253,16 +259,13 @@ main {
             }
         }
         &__celeb-background-img-fall-safe {
-            width: clamp(250px, 38%, 42%);
-            height: 100%;
-            @media (min-width: $break-point-xxlg) {
-                height: 155%
-            }
+            width: 100%;
+            height: 30rem;
             @media (max-width: $break-point-m) {
                 height: 20rem;
                 margin-bottom: 1rem;
             }
-            background-color: $light-black-background-color;
+            background-color: $light-black-color;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -274,7 +277,7 @@ main {
             line-height: 3rem;
         }
         &__celeb-movies-img-fall-safe {
-            background-color: $light-black-background-color;
+            background-color: $light-black-color;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -329,7 +332,7 @@ main {
     }
     &__overlay-css {
         position: absolute;
-        background-color: $light-black-background-color;
+        background-color: $light-black-color;
         height: 100%;
         width: 100%;
         bottom: 0;
@@ -391,7 +394,7 @@ main {
         .search-by-year-container {
             width: 359px;
             .text-input {
-                background-color: $main-black-background-color;
+                background-color: $main-black-color;
                 outline: none;
                 border: none;
                 border-bottom: 2px solid $main-grey-color;
@@ -405,7 +408,7 @@ main {
             }
             .clear-year-filter-button {
                 background-color: $main-golden-color;
-                color: $main-black-background-color;
+                color: $main-black-color;
                 font-weight: 600;
                 border-radius: 1rem;
                 width: 4rem;
@@ -428,7 +431,7 @@ main {
                 pointer-events: none;
                 span.drop-down-current-value {
                     pointer-events: none;
-                    color: $light-black-background-color;
+                    color: $light-black-color;
                     cursor: not-allowed;
                 }
             }
@@ -441,7 +444,7 @@ main {
                 text-decoration: underline;
                 text-decoration-color: $main-golden-color;
                 &__dormant {
-                    color: $secondary-black-background-color;
+                    color: $secondary-black-color;
                     text-decoration: none;
                 }
             }
@@ -465,7 +468,7 @@ main {
                 cursor: pointer;
             }
             li {
-                background-color: $main-black-background-color;
+                background-color: $main-black-color;
                 color: $main-white-color;
                 border-right: 1px solid $main-white-color;
                 border-left: 1px solid $main-white-color;
@@ -483,7 +486,7 @@ main {
                 }
                 &:hover {
                     background-color: $main-white-color;
-                    color: $main-black-background-color;
+                    color: $main-black-color;
                 }
             }
         }
@@ -543,7 +546,7 @@ main {
                 left: 4px;
             }
             z-index: $z-important;
-            background: $main-black-background-color;
+            background: $main-black-color;
             height: 62px;
             border-bottom-left-radius: $border-radius-2;
             border-top-left-radius: $border-radius-2;
@@ -571,7 +574,7 @@ main {
 .current-movie {
     width: 50%;
     max-width: 1100px;
-    height: 70%;
+    height: 90%;
     max-height: 950px;
     @media (min-width: $break-point-xxlg) {
         max-width: 1500px;
@@ -587,7 +590,8 @@ main {
         height: 550px;
     }
     margin: 0 auto;
-    background-color: $main-black-background-color;
+    background-color: $main-black-color;
+    box-shadow: 12px -12px 28px 2px $main-black-color;
     position: fixed;
     bottom: 1.6%;
     @media (max-width: $break-point-xlg) {
@@ -608,7 +612,7 @@ main {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    &__banner {
+    &__trailer {
         display: flex;
         justify-content: center;
         align-items: center;
@@ -617,7 +621,7 @@ main {
             font-size: $font-size-lg;
         }
         width: 100%;
-        height: 100%;
+        height: 60%;
         @media (min-width: $break-point-xxlg) {
             height: 40rem;
         }
@@ -625,7 +629,7 @@ main {
             height: 45rem;
         }
         text-align: center;
-        background-color: $main-black-background-color;
+        background-color: $secondary-black-color;
         background-position: center;
         background-repeat: no-repeat;
         background-size: cover;
@@ -642,7 +646,6 @@ main {
         font-size: $font-size-m;
         line-height: 2.5rem;
         overflow-y: auto;
-        border-bottom: 1px solid $main-golden-color;
         margin: 1rem 0;
         @media (max-width: $break-point-s) {
             margin: 0.4rem 0;
@@ -658,7 +661,9 @@ main {
         }
     }
     &__details {
-        margin: 2rem 0;
+        position: absolute;
+        right: 20px;
+        top: 19px;
         display: flex;
         justify-content: center;
         align-items: center;

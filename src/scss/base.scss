@@ -13,7 +13,7 @@ a {
     color: inherit;
     &:hover {
         text-decoration: none;
-        text-shadow: 0 0 5px $main-black-background-color;
+        text-shadow: 0 0 5px $main-black-color;
         cursor: pointer;
     }
 }
@@ -41,7 +41,7 @@ body {
     @media (min-width: $break-point-xxlg) {
         font-size: $font-size-m;
     }
-    background-color: $main-black-background-color;
+    background-color: $main-black-color;
     color: $main-grey-color;
     display: flex;
     justify-content: center;
