@@ -294,9 +294,6 @@ function makeHTMLContainers(whereToAppendElement, poster = true, mediaKind, data
             iframeElement.allowFullscreen = true;
             bannerElement.append(iframeElement);
         } else {
-            // let bannerImageFallSafeElement = document.createElement("h4");
-            // bannerImageFallSafeElement.textContent = data.title;
-            // bannerElement.append(bannerImageFallSafeElement);
             let bannerImageFallSafeElement = document.createElement("i");
             bannerImageFallSafeElement.classList.add("fas", "fa-video-slash")
             bannerElement.append(bannerImageFallSafeElement);

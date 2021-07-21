@@ -73,9 +73,6 @@ main {
     .generic-media-container {
         position: relative;
         width: clamp(214px, 25%, 400px);
-        // @media (max-width: $break-point-m) {
-        //     min-width: 260px;
-        // }
         height: 350px;
         background: $main-black-color;
         margin: 0 1.5rem 8rem;
