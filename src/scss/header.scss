@@ -1,11 +1,22 @@
 @import "./_variables.scss";
 //
 header {
-    margin: 2rem auto 4.5rem;
-    width: 92%;
     @media (max-width: $break-point-l) {
         width: 95%;
     }
+    @media (max-width: $break-point-m) {
+        width: 90%;
+        // min-width: 359px;
+        position: fixed;
+        top: 1.5px;
+        right: 0;
+        left: 0;
+        margin-bottom: 20rem;
+        background-color: $main-black-color;
+        z-index: $z-important;
+    }
+    margin: 2rem auto 4.5rem;
+    width: 92%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -15,12 +26,11 @@ header {
     .toggle-side-bar {
         visibility: hidden;
         pointer-events: none;
-    }
-    @media (max-width: $break-point-xlg) {
-        .toggle-side-bar {
-            font-size: 1.1rem;
+        @media (max-width: $break-point-xlg) {
+            font-size: 2rem;
             visibility: visible;
             pointer-events: visible;
+            width: 1.4rem;
             &:hover {
                 cursor: pointer;
                 color: $main-golden-color;

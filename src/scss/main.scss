@@ -46,6 +46,7 @@ main {
             margin: 0 auto;
             @media (max-width: $break-point-s) {
                 width: 100%;
+                margin-top: 6rem;
             }
         }
     }
