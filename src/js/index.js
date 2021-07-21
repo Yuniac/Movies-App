@@ -2,9 +2,10 @@
     IT'S ALL ABOUT FETCHING DATA AND WORKING WITH THE DOM HERE
 */
 import { togglePopups } from "./helpers"
+import { config } from "./config"
 
 // the api key;
-const apiKey = "?api_key=abb107c96224ec174a429b41fa17acda";
+const apiKey = config.apiKey;
 
 const nowPlayingApiUrl = "https://api.themoviedb.org/3/movie/now_playing"
 const moviesTrailerApiUrl = "https://api.themoviedb.org/3/movie/";
